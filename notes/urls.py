@@ -8,6 +8,7 @@ urlpatterns = [
     path('<int:pk>/bookmark/', views.BookmarkToggleView.as_view(), name='toggle_bookmark'),
     path('<int:pk>/like/', views.LikeToggleView.as_view(), name='toggle_like'),
     path('<int:pk>/download/', views.NoteDownloadView.as_view(), name='download_note'),
+    path('<int:pk>/view/', views.NoteFileView.as_view(), name='view_note'),
     path('<int:pk>/delete/', views.NoteDeleteView.as_view(), name='note_delete'),
     path('<int:pk>/comment/', views.CommentAddView.as_view(), name='comment_add'),
 ]

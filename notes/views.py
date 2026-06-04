@@ -167,6 +167,18 @@ class LikeToggleView(LoginRequiredMixin, View):
         return JsonResponse({'liked': True, 'count': count})
 
 
+class NoteFileView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        note = get_object_or_404(Note, pk=pk)
+        if note.visibility != 'public' and note.user != request.user:
+            raise Http404
+        from django.http import FileResponse
+        storage = note.file.storage
+        if hasattr(storage, 'cloud_name'):
+            return redirect(note.file.url)
+        return FileResponse(storage.open(note.file.name), filename=note.file.name)
+
+
 class NoteDownloadView(LoginRequiredMixin, View):
     def get(self, request, pk):
         note = get_object_or_404(Note, pk=pk)
@@ -176,7 +188,11 @@ class NoteDownloadView(LoginRequiredMixin, View):
         Download.objects.create(user=request.user, note=note)
         Note.objects.filter(pk=pk).update(download_count=F('download_count') + 1)
         UsageLog.objects.create(user=request.user, action='note_download', detail={'note_id': note.id})
-        return redirect(note.file.url)
+        storage = note.file.storage
+        if hasattr(storage, 'cloud_name'):
+            return redirect(note.file.url)
+        from django.http import FileResponse
+        return FileResponse(storage.open(note.file.name), filename=note.file.name, as_attachment=True)
 
 
 class NoteDeleteView(LoginRequiredMixin, View):

@@ -26,7 +26,7 @@
                     </div>
                     {% if note.description %}<p class="small text-muted">{{ note.description }}</p>{% endif %}
                     <div class="d-flex flex-wrap gap-2 pt-2">
-                        <a href="{{ note.file.url }}" class="btn btn-primary btn-sm" target="_blank"><i class="bi bi-eye me-1"></i>View</a>
+                        <a href="{% url 'view_note' note.pk %}" class="btn btn-primary btn-sm" target="_blank"><i class="bi bi-eye me-1"></i>View</a>
                         {% if user.is_authenticated %}
                         <a href="{% url 'download_note' note.pk %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-download me-1"></i>Download</a>
                         <button class="btn btn-outline-danger btn-sm like-btn" data-note-id="{{ note.pk }}"><i class="bi bi-heart{% if is_liked %}-fill{% endif %}"></i> <span class="like-count">{{ note.like_count }}</span></button>
