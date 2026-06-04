@@ -3,178 +3,216 @@
 {% block meta_description %}Chhohreivung - AI-powered study platform. Upload your notes and generate MCQs, flashcards, summaries, and practice tests instantly. Study smarter with AI.{% endblock %}
 {% block og_description %}AI-powered study platform. Upload notes, generate MCQs, flashcards, summaries, and practice tests.{% endblock %}
 {% block content %}
-<div class="hero-section text-center">
-    <div class="container">
-        <h1 class="display-5 fw-bold mb-3">Study Smarter with <span style="color: #A78BFA;">AI</span></h1>
-        <p class="lead mb-4 mx-auto opacity-75" style="max-width: 550px;">Upload your notes and instantly generate MCQs, flashcards, summaries, and practice tests.</p>
-        {% if user.is_authenticated %}
-        <a href="{% url 'dashboard' %}" class="btn btn-light btn-lg px-4 fw-semibold" style="color: var(--primary);">Go to Dashboard <i class="bi bi-arrow-right ms-1"></i></a>
-        {% else %}
-        <a href="{% url 'account_signup' %}" class="btn btn-light btn-lg px-4 fw-semibold me-0 me-sm-2 mb-2 mb-sm-0" style="color: var(--primary);">Get Started Free</a>
-        <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-lg px-4 fw-semibold">Login</a>
-        {% endif %}
+
+<div class="hero-section text-center position-relative overflow-hidden" style="padding:120px 0 100px;background:linear-gradient(135deg,#1E1B4B 0%,#312E81 40%,var(--primary) 100%);">
+    <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
+        <div style="position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 50%,rgba(167,139,250,0.15) 0%,transparent 50%),radial-gradient(circle at 70% 50%,rgba(124,58,237,0.1) 0%,transparent 50%)"></div>
+        <div style="position:absolute;top:20%;left:10%;width:300px;height:300px;border-radius:50%;background:rgba(167,139,250,0.08);filter:blur(60px)"></div>
+        <div style="position:absolute;bottom:10%;right:15%;width:250px;height:250px;border-radius:50%;background:rgba(124,58,237,0.08);filter:blur(50px)"></div>
+    </div>
+    <div class="container position-relative" style="z-index:1">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-4" style="background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);font-size:.8rem;color:rgba(255,255,255,0.8)">
+            <span class="badge rounded-pill bg-white text-dark" style="font-size:.65rem;padding:.2rem .5rem">NEW</span>
+            AI-powered study tools
+        </div>
+        <h1 class="display-4 fw-bold mb-3 lh-1" style="letter-spacing:-.03em">Study Smarter<br>with <span style="background:linear-gradient(135deg,#A78BFA,#C4B5FD);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Artificial Intelligence</span></h1>
+        <p class="lead mb-4 mx-auto opacity-75" style="max-width:580px;font-size:1.1rem">Upload your notes and instantly generate MCQs, flashcards, summaries, and practice tests. Turn hours of study into minutes.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="btn btn-light btn-lg px-5 fw-semibold" style="color:var(--primary);border-radius:12px;padding:.7rem 2rem">Go to Dashboard <i class="bi bi-arrow-right ms-1"></i></a>
+            {% else %}
+            <a href="{% url 'account_signup' %}" class="btn btn-light btn-lg px-5 fw-semibold" style="color:var(--primary);border-radius:12px;padding:.7rem 2rem">Get Started Free <i class="bi bi-arrow-right ms-1"></i></a>
+            <a href="{% url 'note_list' %}" class="btn btn-lg px-4 fw-semibold" style="border-radius:12px;padding:.7rem 1.5rem;border:1.5px solid rgba(255,255,255,0.3);color:#fff;background:transparent">Browse Notes</a>
+            {% endif %}
+        </div>
+        <div class="d-flex justify-content-center gap-4 mt-5 pt-3" style="border-top:1px solid rgba(255,255,255,0.1)">
+            <div><div class="fw-bold fs-4" style="color:#A78BFA">{{ public_notes_count|default:"0" }}+</div><div class="small opacity-75">Notes Shared</div></div>
+            <div><div class="fw-bold fs-4" style="color:#A78BFA">5</div><div class="small opacity-75">Free Generations/Day</div></div>
+            <div><div class="fw-bold fs-4" style="color:#A78BFA">AI</div><div class="small opacity-75">Powered</div></div>
+        </div>
     </div>
 </div>
 
 <section class="py-5">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">How It Works</h2>
-            <p class="text-muted">Three steps to supercharge your study</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card text-center p-4 h-100 border-0 shadow-sm">
-                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 56px; height: 56px;">
-                        <i class="bi bi-upload fs-3 text-primary"></i>
-                    </div>
-                    <h5 class="fw-semibold">Upload Notes</h5>
-                    <p class="text-muted small mb-0">Upload your PDF or DOCX study materials.</p>
-                </div>
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-5">
+                <span class="badge rounded-pill mb-2" style="background:var(--primary-light);color:var(--primary);font-size:.7rem;padding:.3rem .8rem">How It Works</span>
+                <h2 class="fw-bold mb-2" style="font-size:1.75rem">Three steps to master any subject</h2>
+                <p class="text-muted mb-0">From upload to practice in minutes. No setup, no hassle.</p>
             </div>
-            <div class="col-md-4">
-                <div class="card text-center p-4 h-100 border-0 shadow-sm">
-                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 56px; height: 56px;">
-                        <i class="bi bi-magic fs-3 text-primary"></i>
+            <div class="col-lg-7">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="text-center p-3" style="border-radius:12px;background:var(--bg-card);border:1px solid var(--border);height:100%">
+                            <div class="d-flex align-items-center justify-content-center mx-auto mb-2" style="width:48px;height:48px;border-radius:12px;background:var(--primary-light);color:var(--primary);font-size:1.2rem">1</div>
+                            <h6 class="fw-semibold mb-1">Upload</h6>
+                            <p class="text-muted mb-0" style="font-size:.8rem">Drop your PDF or DOCX notes</p>
+                        </div>
                     </div>
-                    <h5 class="fw-semibold">AI Generation</h5>
-                    <p class="text-muted small mb-0">Generate MCQs, flashcards, and summaries.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center p-4 h-100 border-0 shadow-sm">
-                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 56px; height: 56px;">
-                        <i class="bi bi-trophy fs-3 text-primary"></i>
+                    <div class="col-md-4">
+                        <div class="text-center p-3" style="border-radius:12px;background:var(--bg-card);border:1px solid var(--border);height:100%">
+                            <div class="d-flex align-items-center justify-content-center mx-auto mb-2" style="width:48px;height:48px;border-radius:12px;background:var(--primary-light);color:var(--primary);font-size:1.2rem">2</div>
+                            <h6 class="fw-semibold mb-1">Generate</h6>
+                            <p class="text-muted mb-0" style="font-size:.8rem">AI creates questions & flashcards</p>
+                        </div>
                     </div>
-                    <h5 class="fw-semibold">Practice & Learn</h5>
-                    <p class="text-muted small mb-0">Take tests and track your progress.</p>
+                    <div class="col-md-4">
+                        <div class="text-center p-3" style="border-radius:12px;background:var(--bg-card);border:1px solid var(--border);height:100%">
+                            <div class="d-flex align-items-center justify-content-center mx-auto mb-2" style="width:48px;height:48px;border-radius:12px;background:var(--primary-light);color:var(--primary);font-size:1.2rem">3</div>
+                            <h6 class="fw-semibold mb-1">Practice</h6>
+                            <p class="text-muted mb-0" style="font-size:.8rem">Test yourself and track progress</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="py-5 bg-white">
+<section class="py-5" style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold">Features</h2>
-            <p class="text-muted">Everything you need to ace your exams</p>
+            <span class="badge rounded-pill mb-2" style="background:var(--primary-light);color:var(--primary);font-size:.7rem;padding:.3rem .8rem">Features</span>
+            <h2 class="fw-bold mb-1" style="font-size:1.75rem">Everything you need to ace your exams</h2>
+            <p class="text-muted">Powerful tools built around your study materials</p>
         </div>
-        <div class="row g-4">
-            <div class="col-md-4"><div class="d-flex align-items-start gap-3"><div class="bg-light rounded-2 p-2 flex-shrink-0" style="width: 40px; height: 40px;"><i class="bi bi-file-text text-primary"></i></div><div><h6 class="fw-semibold mb-1">Smart Notes</h6><p class="small text-muted mb-0">Upload, organize, and search through your study materials.</p></div></div></div>
-            <div class="col-md-4"><div class="d-flex align-items-start gap-3"><div class="bg-light rounded-2 p-2 flex-shrink-0" style="width: 40px; height: 40px;"><i class="bi bi-question-circle text-primary"></i></div><div><h6 class="fw-semibold mb-1">AI Questions</h6><p class="small text-muted mb-0">Generate MCQs, short, and long questions from any note.</p></div></div></div>
-            <div class="col-md-4"><div class="d-flex align-items-start gap-3"><div class="bg-light rounded-2 p-2 flex-shrink-0" style="width: 40px; height: 40px;"><i class="bi bi-card-text text-primary"></i></div><div><h6 class="fw-semibold mb-1">Flashcards</h6><p class="small text-muted mb-0">Create digital flashcards for active recall learning.</p></div></div></div>
-            <div class="col-md-4"><div class="d-flex align-items-start gap-3"><div class="bg-light rounded-2 p-2 flex-shrink-0" style="width: 40px; height: 40px;"><i class="bi bi-journal-text text-primary"></i></div><div><h6 class="fw-semibold mb-1">Summaries</h6><p class="small text-muted mb-0">Get AI-generated summaries of your study materials.</p></div></div></div>
-            <div class="col-md-4"><div class="d-flex align-items-start gap-3"><div class="bg-light rounded-2 p-2 flex-shrink-0" style="width: 40px; height: 40px;"><i class="bi bi-clock text-primary"></i></div><div><h6 class="fw-semibold mb-1">Practice Tests</h6><p class="small text-muted mb-0">Timed practice tests with instant scoring.</p></div></div></div>
-            <div class="col-md-4"><div class="d-flex align-items-start gap-3"><div class="bg-light rounded-2 p-2 flex-shrink-0" style="width: 40px; height: 40px;"><i class="bi bi-share text-primary"></i></div><div><h6 class="fw-semibold mb-1">Share & Discover</h6><p class="small text-muted mb-0">Share notes publicly and discover materials.</p></div></div></div>
+        <div class="row g-3">
+            <div class="col-md-4 col-6">
+                <div class="p-3 h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div class="mb-2" style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary)"><i class="bi bi-file-text"></i></div>
+                    <h6 class="fw-semibold mb-1" style="font-size:.9rem">Smart Notes</h6>
+                    <p class="text-muted mb-0" style="font-size:.8rem">Upload, organize, and search your study materials.</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="p-3 h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div class="mb-2" style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary)"><i class="bi bi-question-circle"></i></div>
+                    <h6 class="fw-semibold mb-1" style="font-size:.9rem">AI Questions</h6>
+                    <p class="text-muted mb-0" style="font-size:.8rem">MCQs, short & long questions from any note.</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="p-3 h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div class="mb-2" style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary)"><i class="bi bi-card-text"></i></div>
+                    <h6 class="fw-semibold mb-1" style="font-size:.9rem">Flashcards</h6>
+                    <p class="text-muted mb-0" style="font-size:.8rem">Digital flashcards for active recall.</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="p-3 h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div class="mb-2" style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary)"><i class="bi bi-journal-text"></i></div>
+                    <h6 class="fw-semibold mb-1" style="font-size:.9rem">Summaries</h6>
+                    <p class="text-muted mb-0" style="font-size:.8rem">AI-generated summaries of your notes.</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="p-3 h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div class="mb-2" style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary)"><i class="bi bi-clock"></i></div>
+                    <h6 class="fw-semibold mb-1" style="font-size:.9rem">Practice Tests</h6>
+                    <p class="text-muted mb-0" style="font-size:.8rem">Timed tests with instant scoring.</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="p-3 h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div class="mb-2" style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary)"><i class="bi bi-share"></i></div>
+                    <h6 class="fw-semibold mb-1" style="font-size:.9rem">Share & Discover</h6>
+                    <p class="text-muted mb-0" style="font-size:.8rem">Share notes and discover materials.</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <section class="py-5">
     <div class="container">
-        <div class="row g-3 justify-content-center text-center">
-            <div class="col-md-3 col-6"><div class="card border-0 shadow-sm p-4"><h3 class="fw-bold text-primary mb-0">{{ public_notes_count|default:"0" }}+</h3><p class="text-muted small mb-0 mt-1">Notes Shared</p></div></div>
-            <div class="col-md-3 col-6"><div class="card border-0 shadow-sm p-4"><h3 class="fw-bold text-primary mb-0">AI</h3><p class="text-muted small mb-0 mt-1">Powered Generation</p></div></div>
-            <div class="col-md-3 col-6"><div class="card border-0 shadow-sm p-4"><h3 class="fw-bold text-primary mb-0">Free</h3><p class="text-muted small mb-0 mt-1">To Get Started</p></div></div>
-            <div class="col-md-3 col-6"><div class="card border-0 shadow-sm p-4"><h3 class="fw-bold text-primary mb-0">5/Day</h3><p class="text-muted small mb-0 mt-1">Free Generations</p></div></div>
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <div class="position-relative" style="border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(124,58,237,0.15)">
+                    <div style="background:linear-gradient(135deg,#1E1B4B,#312E81);padding:2rem;min-height:300px;display:flex;align-items:center;justify-content:center">
+                        <div style="text-align:center;color:#fff">
+                            <i class="bi bi-magic" style="font-size:3rem;opacity:.5;display:block;margin-bottom:1rem"></i>
+                            <div style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;background:linear-gradient(135deg,#A78BFA,#C4B5FD);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">AI Generation</div>
+                            <div style="opacity:.6;font-size:.9rem">Upload once, generate everything</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <span class="badge rounded-pill mb-2" style="background:var(--primary-light);color:var(--primary);font-size:.7rem;padding:.3rem .8rem">Why Chhohreivung</span>
+                <h2 class="fw-bold mb-2" style="font-size:1.75rem">From one note, get everything</h2>
+                <p class="text-muted mb-3">Upload your study material once and let AI generate multiple question formats, flashcards, and summaries — all from a single source.</p>
+                <div class="d-flex flex-column gap-2">
+                    <div class="d-flex align-items-center gap-2" style="font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981"></i> Multiple choice questions with explanations</div>
+                    <div class="d-flex align-items-center gap-2" style="font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981"></i> Short and long answer questions</div>
+                    <div class="d-flex align-items-center gap-2" style="font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981"></i> Digital flashcards for active recall</div>
+                    <div class="d-flex align-items-center gap-2" style="font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981"></i> Concise AI summaries</div>
+                    <div class="d-flex align-items-center gap-2" style="font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981"></i> Timed practice tests with scoring</div>
+                </div>
+                {% if not user.is_authenticated %}
+                <a href="{% url 'account_signup' %}" class="btn btn-primary mt-3 px-4" style="border-radius:12px">Start Studying Free <i class="bi bi-arrow-right ms-1"></i></a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </section>
 
 {% if recent_notes %}
-<section class="py-5 bg-white">
+<section class="py-5" style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Recent Notes</h2>
-            <p class="text-muted">Discover study materials shared by the community</p>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <span class="badge rounded-pill mb-1" style="background:var(--primary-light);color:var(--primary);font-size:.7rem;padding:.3rem .8rem">Community</span>
+                <h2 class="fw-bold mb-0" style="font-size:1.5rem">Recent Notes</h2>
+            </div>
+            <a href="{% url 'note_list' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3" style="font-size:.8rem">View All <i class="bi bi-arrow-right ms-1"></i></a>
         </div>
-        <div class="row g-4">
+        <div class="row g-3">
             {% for note in recent_notes %}
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm position-relative overflow-hidden" style="border-left:4px solid transparent;border-image:linear-gradient(to bottom,var(--primary),#A78BFA);border-image-slice:1">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-start gap-3 mb-3">
-                            <div class="d-flex align-items-center justify-content-center rounded-2 flex-shrink-0" style="width:40px;height:40px;background:var(--primary-light)">
+                <div class="h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);overflow:hidden;transition:box-shadow .2s,transform .2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.06)';this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow='';this.style.transform=''">
+                    <div style="padding:1rem">
+                        <div class="d-flex align-items-start gap-2 mb-2">
+                            <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-2" style="width:36px;height:36px;background:var(--primary-light)">
                                 {% with ext=note.file.name|slice:'-3:'|lower %}
-                                {% if ext == 'pdf' %}<i class="bi bi-file-earmark-pdf-fill text-danger"></i>
-                                {% elif ext == 'doc' or ext == 'docx' or ext == 'ocx' %}<i class="bi bi-file-earmark-word-fill" style="color:#2B579A"></i>
-                                {% else %}<i class="bi bi-file-earmark-text-fill text-primary"></i>
+                                {% if ext == 'pdf' %}<i class="bi bi-file-earmark-pdf-fill text-danger" style="font-size:.9rem"></i>
+                                {% elif ext == 'doc' or ext == 'docx' or ext == 'ocx' %}<i class="bi bi-file-earmark-word-fill" style="font-size:.9rem;color:#2B579A"></i>
+                                {% else %}<i class="bi bi-file-earmark-text-fill text-primary" style="font-size:.9rem"></i>
                                 {% endif %}
                                 {% endwith %}
                             </div>
                             <div style="min-width:0">
-                                <span class="badge rounded-pill" style="background:var(--primary-light);color:var(--primary);font-size:.65rem">{{ note.subject.name|default:"General" }}</span>
-                                <h6 class="fw-semibold mt-1 mb-1 text-truncate">{{ note.title|truncatechars:35 }}</h6>
-                                <p class="small text-muted mb-0" style="line-height:1.5;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden">{{ note.preview|default:note.description|truncatechars:200 }}</p>
+                                <span class="badge rounded-pill" style="background:var(--primary-light);color:var(--primary);font-size:.6rem;padding:.15rem .5rem">{{ note.subject.name|default:"General" }}</span>
+                                <h6 class="fw-semibold mt-1 mb-0 text-truncate" style="font-size:.85rem">{{ note.title|truncatechars:30 }}</h6>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center pt-3 border-top small">
-                            <div class="d-flex align-items-center gap-2 text-muted">
-                                <i class="bi bi-person-circle"></i>
-                                <span>{{ note.user.username }}</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-3 text-muted">
-                                <span><i class="bi bi-download me-1"></i>{{ note.download_count }}</span>
-                                <span><i class="bi bi-heart me-1"></i>{{ note.like_count|default:"0" }}</span>
-                            </div>
-                        </div>
-                        <div class="position-absolute inset-0 d-flex align-items-center justify-content-center rounded-3" style="inset:0;background:rgba(0,0,0,0.04);backdrop-filter:blur(2px);opacity:0;transition:opacity .25s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">
-                            <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm"><i class="bi bi-person-plus me-1"></i>Sign Up to View</a>
+                        <p class="text-muted mb-0" style="font-size:.78rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ note.preview|default:note.description|truncatechars:120 }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-2 pt-2" style="border-top:1px solid var(--border)">
+                            <div class="d-flex align-items-center gap-1 text-muted" style="font-size:.75rem"><i class="bi bi-person-circle"></i> {{ note.user.username }}</div>
+                            <div class="d-flex gap-2 text-muted" style="font-size:.75rem"><span><i class="bi bi-download me-1"></i>{{ note.download_count }}</span><span><i class="bi bi-heart me-1"></i>{{ note.like_count|default:"0" }}</span></div>
                         </div>
                     </div>
                 </div>
             </div>
             {% endfor %}
-        </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'note_list' %}" class="btn btn-outline-primary rounded-pill px-4">Browse All Notes <i class="bi bi-arrow-right ms-1"></i></a>
         </div>
     </div>
 </section>
 {% endif %}
 
-{% if community_posts %}
 <section class="py-5">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">From the Community</h2>
-            <p class="text-muted">See what others are studying</p>
-        </div>
-        <div class="row justify-content-center g-4">
-            {% for post in community_posts %}
-            <div class="col-md-6 col-lg-4">
-                <div class="card border-0 shadow-sm h-100 position-relative">
-                    <div class="card-body p-3">
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <div class="avatar-sm" style="width:28px;height:28px;font-size:.65rem;background:linear-gradient(135deg,#10B981,#34D399)">{{ post.user.username|first|upper }}</div>
-                            <span class="fw-semibold small">{{ post.user.username }}</span>
-                            <span class="text-muted" style="font-size:.7rem">&middot; {{ post.created_at|timesince }} ago</span>
-                        </div>
-                        <p class="mb-2 small" style="line-height:1.5;white-space:pre-wrap">{{ post.content|truncatechars:120 }}</p>
-                        {% if post.shared_note %}
-                        <div class="p-2 rounded-2" style="background:var(--bg)">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="bi bi-file-earmark-text text-primary flex-shrink-0"></i>
-                                <div style="min-width:0">
-                                    <div class="fw-medium small text-truncate">{{ post.shared_note.title }}</div>
-                                    {% if post.shared_summary %}<p class="small text-muted mb-0 mt-1" style="font-size:.75rem;line-height:1.4">{{ post.shared_summary }}</p>{% endif %}
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-                        <div class="position-absolute inset-0 d-flex align-items-center justify-content-center rounded-3" style="inset:0;background:rgba(0,0,0,0.03);backdrop-filter:blur(1px);opacity:0;transition:opacity .2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">
-                            <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm rounded-pill px-3"><i class="bi bi-person-plus me-1"></i>Join to Interact</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'account_signup' %}" class="btn btn-primary rounded-pill px-4">Join the Community <i class="bi bi-arrow-right ms-1"></i></a>
+        <div class="text-center" style="max-width:600px;margin:0 auto">
+            <span class="badge rounded-pill mb-2" style="background:var(--primary-light);color:var(--primary);font-size:.7rem;padding:.3rem .8rem">Get Started</span>
+            <h2 class="fw-bold mb-2" style="font-size:1.5rem">Ready to study smarter?</h2>
+            <p class="text-muted mb-4">Join students who are already using AI to accelerate their learning. Free to start, no credit card needed.</p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'note_upload' %}" class="btn btn-primary btn-lg px-4" style="border-radius:12px;padding:.7rem 2rem">Upload Your First Note <i class="bi bi-arrow-right ms-1"></i></a>
+            {% else %}
+            <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg px-4" style="border-radius:12px;padding:.7rem 2rem">Create Free Account <i class="bi bi-arrow-right ms-1"></i></a>
+            {% endif %}
         </div>
     </div>
 </section>
-{% endif %}
+
 {% endblock %}
