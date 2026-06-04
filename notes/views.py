@@ -42,11 +42,15 @@ class NoteUploadView(LoginRequiredMixin, CreateView):
 
     def process_document(self, note):
         try:
-            import requests as req
             from io import BytesIO
-            resp = req.get(note.file.url, timeout=30)
-            resp.raise_for_status()
-            data = BytesIO(resp.content)
+            storage = note.file.storage
+            if hasattr(storage, 'cloud_name'):
+                import requests as req
+                resp = req.get(note.file.url, timeout=30)
+                resp.raise_for_status()
+                data = BytesIO(resp.content)
+            else:
+                data = storage.open(note.file.name)
             text = ''
             if note.file_type == 'pdf':
                 doc = fitz.open(stream=data, filetype='pdf')
