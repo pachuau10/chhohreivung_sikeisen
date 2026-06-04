@@ -40,8 +40,7 @@ class GeminiClient:
 
     def _groq_generate(self, prompt, temperature, max_tokens):
         if not self.api_key:
-            return self._mock_response(prompt)
-        last_error = None
+            return json.dumps({'error': 'Groq API key not configured. Set GROQ_API_KEY in your environment.'})
         for attempt in range(5):
             try:
                 resp = requests.post(
@@ -54,17 +53,17 @@ class GeminiClient:
                 return resp.json()['choices'][0]['message']['content']
             except requests.exceptions.HTTPError as e:
                 if e.response.status_code == 429 and attempt < 4:
-                    wait = attempt + 1
+                    wait = (attempt + 1) * 2
                     logger.warning(f'Groq rate limited, retrying in {wait}s')
                     time.sleep(wait)
-                    last_error = e
                 else:
-                    logger.error(f'Groq API error: {e}, falling back to mock')
-                    return self._mock_response(prompt)
+                    msg = f'Groq API rate limit exceeded. Try again in a minute. (HTTP {e.response.status_code})'
+                    logger.error(msg)
+                    return json.dumps({'error': msg})
             except Exception as e:
                 logger.error(f'Groq API error: {e}')
-                return self._mock_response(prompt)
-        return self._mock_response(prompt)
+                return json.dumps({'error': f'AI service temporarily unavailable. Please try again.'})
+        return json.dumps({'error': 'AI service temporarily unavailable. Please try again.'})
 
     def _gemini_generate(self, prompt, temperature, max_tokens):
         if not self.model:
