@@ -1,0 +1,43 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ test.title }} - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm animate-scale">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="fw-semibold mb-0"><i class="bi bi-journal-check me-1 text-primary"></i>{{ test.title }}</h5>
+                        <div class="d-flex gap-2 mt-1">
+                            <span class="badge bg-light small">{{ test.get_difficulty_display }}</span>
+                            <span class="badge bg-light small">{{ questions|length }} questions</span>
+                        </div>
+                    </div>
+                    <div id="timer" class="badge bg-dark fs-6 px-3 py-2"><i class="bi bi-clock me-1"></i><span id="timer-display">{{ duration_seconds }}</span></div>
+                </div>
+                <div class="card-body p-4">
+                    <form id="test-form" method="post" action="{% url 'submit_test' test.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="time_taken" id="time-taken">
+                        <input type="hidden" name="answers" id="answers-input">
+                        {% for question in questions %}
+                        <div class="question-card">
+                            <p class="fw-medium small mb-2">{{ forloop.counter }}. {{ question.question_text }}</p>
+                            {% if question.options %}
+                            <div class="ms-2">{% for opt in question.options %}<div class="form-check py-1"><input class="form-check-input" type="radio" name="q_{{ question.id }}" value="{{ forloop.counter0 }}" id="q{{ question.id }}_{{ forloop.counter0 }}"><label class="form-check-label small" for="q{{ question.id }}_{{ forloop.counter0 }}">{{ opt }}</label></div>{% endfor %}</div>
+                            {% else %}<textarea class="form-control" name="q_{{ question.id }}" rows="2" placeholder="Your answer..."></textarea>{% endif %}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary w-100 btn-lg mt-3"><i class="bi bi-check-lg me-1"></i>Submit Test</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+(function(){var t={{ duration_seconds }},e=document.getElementById('timer'),d=document.getElementById('timer-display'),f=document.getElementById('test-form');setInterval(function(){var m=Math.floor(t/60),s=t%60;d.textContent=m.toString().padStart(2,'0')+':'+s.toString().padStart(2,'0');if(t<=60){e.classList.remove('bg-dark');e.classList.add('bg-danger')}if(t<=0){alert('Time is up!');f.submit()}t--},1000);f.addEventListener('submit',function(){var a={};f.querySelectorAll('input[type=radio]:checked, textarea').forEach(function(i){a[i.name.replace('q_','')]=i.value});document.getElementById('answers-input').value=JSON.stringify(a);document.getElementById('time-taken').value={{ duration_seconds }}-t-1})})();
+</script>
+{% endblock %}

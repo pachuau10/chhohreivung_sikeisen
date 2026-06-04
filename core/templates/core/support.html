@@ -1,0 +1,75 @@
+{% extends 'core/base.html' %}
+{% block title %}Support - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h3 class="fw-bold mb-2">Need Help?</h3>
+            <p class="text-muted mb-4">We're here to assist you. Choose the option that works best for you.</p>
+
+            <div class="card border-0 shadow-sm mb-4 animate-slide-up" style="border-left:4px solid #25D366!important">
+                <div class="card-body p-4 text-center">
+                    <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:72px;height:72px;background:#25D36615">
+                        <i class="bi bi-whatsapp fs-1" style="color:#25D366"></i>
+                    </div>
+                    <h5 class="fw-bold">WhatsApp Support</h5>
+                    <p class="small text-muted mb-3">Fastest response. Chat with our team directly on WhatsApp.</p>
+                    <a href="https://wa.me/919362603236" target="_blank" class="btn btn-lg rounded-pill px-5" style="background:#25D366;border:none;color:#fff"><i class="bi bi-whatsapp me-2"></i>Chat on WhatsApp</a>
+                    <p class="small text-muted mt-2">Typically replies within 5 minutes</p>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100 animate-slide-up">
+                        <div class="card-body p-4 text-center">
+                            <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;background:var(--primary-light)">
+                                <i class="bi bi-envelope fs-3 text-primary"></i>
+                            </div>
+                            <h6 class="fw-semibold">Email</h6>
+                            <p class="small text-muted mb-2">Send us a detailed message. We'll respond within 24 hours.</p>
+                            <a href="mailto:chhohreivung.tech@gmail.com" class="btn btn-outline-primary btn-sm rounded-pill px-3">chhohreivung.tech@gmail.com</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100 animate-slide-up">
+                        <div class="card-body p-4 text-center">
+                            <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;background:#EAB30820">
+                                <i class="bi bi-chat-dots fs-3" style="color:#EAB308"></i>
+                            </div>
+                            <h6 class="fw-semibold">Contact Form</h6>
+                            <p class="small text-muted mb-2">Prefer a form? Send us a message and we'll get back to you.</p>
+                            <a href="{% url 'contact' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">Go to Form</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mt-4 animate-slide-up">
+                <div class="card-body p-4">
+                    <h6 class="fw-semibold mb-3">Frequently Asked Questions</h6>
+                    <div class="accordion" id="faq">
+                        <div class="accordion-item border-0 mb-2" style="background:var(--bg);border-radius:8px">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed bg-transparent shadow-none fw-semibold small" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">How many AI generations do I get?</button></h2>
+                            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faq"><div class="accordion-body small text-muted pt-0">Free accounts get 5 AI generations per day. Premium gets unlimited AI generations. Generations reset daily.</div></div>
+                        </div>
+                        <div class="accordion-item border-0 mb-2" style="background:var(--bg);border-radius:8px">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed bg-transparent shadow-none fw-semibold small" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">What file types are supported?</button></h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faq"><div class="accordion-body small text-muted pt-0">We support PDF and DOCX files. Free accounts can upload up to 10MB; Premium gets 100MB per file.</div></div>
+                        </div>
+                        <div class="accordion-item border-0 mb-2" style="background:var(--bg);border-radius:8px">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed bg-transparent shadow-none fw-semibold small" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">How do I share a note?</button></h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faq"><div class="accordion-body small text-muted pt-0">Open a note and click "Share" to create a community post with that note attached. Other users can then view and download it.</div></div>
+                        </div>
+                        <div class="accordion-item border-0" style="background:var(--bg);border-radius:8px">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed bg-transparent shadow-none fw-semibold small" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">Can I delete my account?</button></h2>
+                            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faq"><div class="accordion-body small text-muted pt-0">Contact us via WhatsApp or email and we'll process your account deletion within 48 hours.</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

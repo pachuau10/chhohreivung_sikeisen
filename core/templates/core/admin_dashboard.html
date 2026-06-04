@@ -1,0 +1,82 @@
+{% extends 'core/base.html' %}
+{% block title %}Admin Dashboard - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex align-items-center gap-2 mb-4">
+        <div class="rounded-2 d-flex align-items-center justify-content-center" style="width:40px;height:40px;background:var(--primary-light)"><i class="bi bi-shield-check text-primary"></i></div>
+        <div><h5 class="fw-bold mb-0">Admin Dashboard</h5><p class="text-muted small mb-0">Platform overview &amp; analytics</p></div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3"><div class="card border-0 shadow-sm h-100"><div class="card-body p-3"><div class="d-flex align-items-center gap-2 mb-1"><div class="rounded-2 p-1" style="background:var(--primary-light)"><i class="bi bi-people text-primary fs-6"></i></div><small class="text-muted">Users</small></div><h4 class="fw-bold mb-0">{{ total_users }}</h4><small class="text-success">+{{ users_today }} today</small></div></div></div>
+        <div class="col-6 col-md-3"><div class="card border-0 shadow-sm h-100"><div class="card-body p-3"><div class="d-flex align-items-center gap-2 mb-1"><div class="rounded-2 p-1" style="background:#10B98120"><i class="bi bi-file-earmark-text" style="color:#10B981"></i></div><small class="text-muted">Notes</small></div><h4 class="fw-bold mb-0">{{ total_notes }}</h4><small class="text-success">+{{ notes_today }} today</small></div></div></div>
+        <div class="col-6 col-md-3"><div class="card border-0 shadow-sm h-100"><div class="card-body p-3"><div class="d-flex align-items-center gap-2 mb-1"><div class="rounded-2 p-1" style="background:#F59E0B20"><i class="bi bi-robot" style="color:#F59E0B"></i></div><small class="text-muted">AI Questions</small></div><h4 class="fw-bold mb-0">{{ total_questions }}</h4><small class="text-muted">+{{ total_flashcards }} flashcards</small></div></div></div>
+        <div class="col-6 col-md-3"><div class="card border-0 shadow-sm h-100"><div class="card-body p-3"><div class="d-flex align-items-center gap-2 mb-1"><div class="rounded-2 p-1" style="background:#EF444420"><i class="bi bi-journal-check" style="color:#EF4444"></i></div><small class="text-muted">Tests Taken</small></div><h4 class="fw-bold mb-0">{{ total_tests }}</h4><small class="text-muted">{{ total_downloads }} downloads</small></div></div></div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-4"><div class="card border-0 shadow-sm h-100" style="border-left:3px solid #F59E0B!important"><div class="card-body p-3"><small class="text-muted">Total Earnings</small><h4 class="fw-bold mb-0" style="color:#F59E0B">${{ total_earnings|floatformat:2 }}</h4><small class="text-muted">${{ earnings_this_month|floatformat:2 }} this month</small></div></div></div>
+        <div class="col-6 col-md-4"><div class="card border-0 shadow-sm h-100" style="border-left:3px solid var(--primary)!important"><div class="card-body p-3"><small class="text-muted">Unique Visitors</small><h4 class="fw-bold mb-0">{{ unique_visits_all }}</h4><small class="text-success">+{{ unique_visits_today }} today</small></div></div></div>
+        <div class="col-6 col-md-4"><div class="card border-0 shadow-sm h-100"><div class="card-body p-3"><small class="text-muted">Most Visited</small>{% for p in top_pages %}<div class="d-flex justify-content-between small"><span class="text-truncate" style="max-width:180px">{{ p.url }}</span><span class="fw-semibold ms-2">{{ p.count }}</span></div>{% empty %}<p class="small text-muted mb-0">No data yet</p>{% endfor %}</div></div></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-header bg-white"><h6 class="fw-semibold mb-0"><i class="bi bi-bar-chart me-1 text-primary"></i>Plans</h6></div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2"><span class="small">Free</span><span class="fw-bold">{{ plan_counts.free }}</span></div>
+                    <div class="progress mb-3" style="height:6px;background:var(--bg)"><div class="progress-bar bg-secondary" style="width:{% widthratio plan_counts.free total_users 100 %}%"></div></div>
+                    <div class="d-flex justify-content-between align-items-center mb-2"><span class="small">Premium</span><span class="fw-bold">{{ plan_counts.premium }}</span></div>
+                    <div class="progress mb-3" style="height:6px;background:var(--bg)"><div class="progress-bar bg-info" style="width:{% widthratio plan_counts.premium total_users 100 %}%"></div></div>
+                    <div class="d-flex justify-content-between align-items-center mb-2"><span class="small">Pro</span><span class="fw-bold">{{ plan_counts.pro }}</span></div>
+                    <div class="progress" style="height:6px;background:var(--bg)"><div class="progress-bar bg-warning" style="width:{% widthratio plan_counts.pro total_users 100 %}%"></div></div>
+                </div>
+            </div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center"><h6 class="fw-semibold mb-0"><i class="bi bi-envelope me-1 text-primary"></i>Contact</h6><span class="badge bg-danger rounded-pill">{{ unread_contact }}</span></div>
+                <div class="card-body p-0">
+                    {% for msg in recent_contact %}
+                    <div class="p-3 border-bottom" style="border-color:var(--border)!important">
+                        <div class="d-flex justify-content-between"><span class="fw-semibold small">{{ msg.name }}</span><small class="text-muted" style="font-size:.65rem">{{ msg.created_at|timesince }} ago</small></div>
+                        <small class="text-muted d-block text-truncate">{{ msg.subject }}</small>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-4"><p class="text-muted small mb-0">No unread messages</p></div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="row g-3 mb-3">
+                <div class="col-6"><div class="card border-0 shadow-sm"><div class="card-body p-3 text-center"><h5 class="fw-bold mb-0 text-primary">{{ total_posts }}</h5><small class="text-muted">Community Posts</small></div></div></div>
+                <div class="col-6"><div class="card border-0 shadow-sm"><div class="card-body p-3 text-center"><h5 class="fw-bold mb-0 text-primary">{{ total_comments }}</h5><small class="text-muted">Comments</small></div></div></div>
+            </div>
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-header bg-white"><h6 class="fw-semibold mb-0"><i class="bi bi-person-plus me-1 text-primary"></i>Recent Users</h6></div>
+                <div class="card-body p-0">
+                    {% for u in recent_users %}
+                    <div class="d-flex align-items-center gap-3 p-3 border-bottom" style="border-color:var(--border)!important">
+                        <div class="avatar-sm" style="width:32px;height:32px;font-size:.7rem;background:linear-gradient(135deg,var(--primary),#A78BFA)">{% if u.profile.avatar %}<img src="{{ u.profile.avatar.url }}" alt="">{% elif u.profile.avatar_url %}<img src="{{ u.profile.avatar_url }}" alt="">{% else %}{{ u.username|first|upper }}{% endif %}</div>
+                        <div class="flex-grow-1"><span class="fw-semibold small">{{ u.username }}</span><small class="text-muted d-block" style="font-size:.7rem">{{ u.email }} &bull; {{ u.date_joined|date:"M d" }}</small></div>
+                        <span class="badge rounded-pill {% if u.profile.plan == 'pro' %}bg-warning text-dark{% elif u.profile.plan == 'premium' %}bg-info{% else %}bg-secondary{% endif %}" style="font-size:.55rem">{{ u.profile.plan|title }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white"><h6 class="fw-semibold mb-0"><i class="bi bi-file-earmark me-1 text-primary"></i>Recent Notes</h6></div>
+                <div class="card-body p-0">
+                    {% for n in recent_notes %}
+                    <div class="d-flex align-items-center gap-3 p-3 border-bottom" style="border-color:var(--border)!important">
+                        <div class="rounded-2 d-flex align-items-center justify-content-center" style="width:36px;height:36px;background:var(--primary-light);flex-shrink:0"><i class="bi bi-file-earmark-text text-primary"></i></div>
+                        <div class="flex-grow-1" style="min-width:0"><span class="fw-semibold small d-block text-truncate">{{ n.title }}</span><small class="text-muted" style="font-size:.7rem">{{ n.user.username }} &bull; {{ n.created_at|date:"M d" }}</small></div>
+                        <span class="badge bg-light" style="font-size:.6rem">{{ n.file_type|upper }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

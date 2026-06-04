@@ -1,0 +1,100 @@
+{% extends 'core/base.html' %}
+{% block title %}Browse Notes - Chhohreivung{% endblock %}
+{% block meta_description %}Browse and discover study notes shared by the Chhohreivung community. Search by subject, title, or content. Free to access.{% endblock %}
+{% block og_description %}Browse and discover study notes shared by the Chhohreivung community. Search by subject, title, or content.{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold mb-1">Browse Notes</h2>
+        <p class="text-muted">Discover study materials shared by the community</p>
+    </div>
+    <form method="get" class="row g-2 mb-4 justify-content-center">
+        <div class="col-12 col-sm-6 col-md-5 col-lg-4">{{ search_form.q }}</div>
+        <div class="col-8 col-sm-4 col-md-3 col-lg-2">{{ search_form.subject }}</div>
+        <div class="col-4 col-sm-2 col-md-2 col-lg-1"><button type="submit" class="btn btn-primary w-100 h-100 d-flex align-items-center justify-content-center"><i class="bi bi-search me-sm-1"></i><span class="d-none d-sm-inline">Search</span></button></div>
+    </form>
+    {% if user.is_authenticated and subjects %}
+    <div class="text-center mb-4">
+        <small class="text-muted d-block mb-2">Follow subjects to see relevant notes</small>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            {% for subject in subjects %}
+            <button class="btn btn-sm rounded-pill subject-follow-btn {% if subject.pk in followed_ids %}btn-primary{% else %}btn-outline-secondary{% endif %}" data-subject-id="{{ subject.pk }}" data-following="{% if subject.pk in followed_ids %}true{% else %}false{% endif %}">
+                <i class="bi {% if subject.pk in followed_ids %}bi-check-circle-fill{% else %}bi-plus-circle{% endif %} me-1"></i>{{ subject.name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% if notes %}
+    <div class="row g-4">
+        {% for note in notes %}
+        <div class="col-md-4 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm position-relative overflow-hidden" style="border-left:4px solid transparent;border-image:linear-gradient(to bottom,var(--primary),#A78BFA);border-image-slice:1">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="d-flex align-items-center justify-content-center rounded-2 flex-shrink-0" style="width:40px;height:40px;background:var(--primary-light)">
+                            {% if note.file_type == 'pdf' %}<i class="bi bi-file-earmark-pdf-fill text-danger"></i>
+                            {% elif note.file_type == 'docx' or note.file_type == 'doc' %}<i class="bi bi-file-earmark-word-fill" style="color:#2B579A"></i>
+                            {% else %}<i class="bi bi-file-earmark-text-fill text-primary"></i>
+                            {% endif %}
+                        </div>
+                        <div style="min-width:0">
+                            <span class="badge rounded-pill" style="background:var(--primary-light);color:var(--primary);font-size:.65rem">{{ note.subject.name|default:"General" }}</span>
+                            <h6 class="fw-semibold mt-1 mb-1 text-truncate">{{ note.title|truncatechars:35 }}</h6>
+                            <p class="small text-muted mb-0" style="line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">{{ note.description|default:"No description"|truncatechars:100 }}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top small">
+                        <div class="d-flex align-items-center gap-2 text-muted">
+                            <i class="bi bi-person-circle"></i>
+                            <span>{{ note.user.username }}</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 text-muted">
+                            <span><i class="bi bi-download me-1"></i>{{ note.download_count }}</span>
+                            <span><i class="bi bi-heart me-1"></i>{{ note.like_count|default:"0" }}</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'note_detail' note.pk %}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if page_obj.paginator.num_pages > 1 %}
+    <nav class="mt-4"><ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page=1">&laquo;</a></li><li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>{% endif %}
+        <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li><li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a></li>{% endif %}
+    </ul></nav>
+    {% endif %}
+    {% else %}
+    <div class="text-center py-5"><i class="bi bi-search display-4 text-muted mb-3 d-block"></i><p class="text-muted">No notes found. Try a different search.</p></div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block extra_scripts %}
+{% if user.is_authenticated %}
+<script>
+document.querySelectorAll('.subject-follow-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var id = this.dataset.subjectId;
+        var following = this.dataset.following === 'true';
+        fetch('/accounts/subject/' + id + '/follow/', { method:'POST', headers:{'X-CSRFToken':'{{ csrf_token }}'} })
+        .then(function(r){return r.json()})
+        .then(function(d){
+            if (d.following) {
+                btn.className = 'btn btn-sm rounded-pill btn-primary subject-follow-btn';
+                btn.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i>' + d.message.replace('Following ','');
+                btn.dataset.following = 'true';
+            } else {
+                btn.className = 'btn btn-sm rounded-pill btn-outline-secondary subject-follow-btn';
+                btn.innerHTML = '<i class="bi bi-plus-circle me-1"></i>' + d.message.replace('Unfollowed ','');
+                btn.dataset.following = 'false';
+            }
+            showToast(d.message, d.following ? 'success' : 'info');
+        }).catch(function(){showToast('Failed','danger')});
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

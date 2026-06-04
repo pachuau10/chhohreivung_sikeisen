@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+{% block title %}Verify Email - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm animate-scale text-center">
+                <div class="card-body p-5">
+                    <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 72px; height: 72px;">
+                        <i class="bi bi-shield-exclamation fs-1 text-warning"></i>
+                    </div>
+                    <h4 class="fw-bold">Verify Your Email</h4>
+                    <p class="text-muted small">You must verify your email address to continue. Check your inbox for the verification link.</p>
+                    <a href="{% url 'account_email' %}" class="btn btn-primary mt-2">Manage Email</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

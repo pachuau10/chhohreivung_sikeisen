@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+{% block title %}Sign In Via Google - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm animate-scale">
+                <div class="card-body p-4 p-md-5 text-center">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width:64px;height:64px">
+                        <i class="bi bi-google fs-2 text-primary"></i>
+                    </div>
+                    <h4 class="fw-bold">Sign In Via Google</h4>
+                    <p class="text-muted small mb-4">You are about to sign in using a third-party account from Google.</p>
+                    <form method="post" action="{{ action_url }}">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary rounded-pill py-2">Continue</button>
+                            <a href="{% url 'account_login' %}" class="btn btn-outline-secondary rounded-pill py-2">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

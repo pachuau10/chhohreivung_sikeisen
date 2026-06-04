@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+{% block title %}Privacy Policy - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h3 class="fw-bold mb-2">Privacy Policy</h3>
+            <p class="text-muted mb-4">Last updated: June 2026</p>
+            <div class="card border-0 shadow-sm animate-slide-up">
+                <div class="card-body p-4 small text-muted" style="line-height:1.8">
+                    <h6 class="fw-semibold text-dark">1. Information We Collect</h6>
+                    <p>We collect information you provide when creating an account (name, email) and uploading study materials (notes, files).</p>
+                    <h6 class="fw-semibold text-dark mt-4">2. How We Use Information</h6>
+                    <p>Your data is used to provide AI-generated study content, improve our services, and communicate with you.</p>
+                    <h6 class="fw-semibold text-dark mt-4">3. Data Storage</h6>
+                    <p>Files are stored securely via Cloudinary. We do not sell or share your personal data with third parties.</p>
+                    <h6 class="fw-semibold text-dark mt-4">4. AI Processing</h6>
+                    <p>Note content is sent to AI providers (Groq, Gemini) solely for generating study materials. No data is retained by them.</p>
+                    <h6 class="fw-semibold text-dark mt-4">5. Your Rights</h6>
+                    <p>You can delete your notes and account at any time. Contact us for data removal requests.</p>
+                    <h6 class="fw-semibold text-dark mt-4">6. Contact</h6>
+                    <p>Questions? Reach out via our <a href="{% url 'contact' %}">contact page</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+{% block title %}Advertise - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h3 class="fw-bold mb-2">Advertise with Us</h3>
+            <p class="text-muted mb-4">Reach students and educators actively studying.</p>
+            <div class="card border-0 shadow-sm mb-4 animate-slide-up">
+                <div class="card-body p-4">
+                    <h6 class="fw-semibold">Why Advertise on Chhohreivung?</h6>
+                    <p class="small text-muted" style="line-height:1.7">Chhohreivung is used by students preparing for exams, professionals upskilling, and educators creating study materials. Get your brand in front of a focused, motivated audience.</p>
+                    <h6 class="fw-semibold mt-4">Available Options</h6>
+                    <ul class="small text-muted" style="line-height:1.8">
+                        <li><strong>Sponsored Posts</strong> — Featured content in the community feed</li>
+                        <li><strong>Banner Ads</strong> — Prominent placement on note and dashboard pages</li>
+                        <li><strong>Newsletter</strong> — Monthly email to our user base</li>
+                    </ul>
+                    <h6 class="fw-semibold mt-4">Get in Touch</h6>
+                    <p class="small text-muted">Interested? <a href="{% url 'contact' %}">Contact us</a> with the subject "Advertising" and we'll send you our media kit.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

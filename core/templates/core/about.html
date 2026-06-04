@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+{% block title %}About - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h3 class="fw-bold mb-2">About Chhohreivung</h3>
+            <p class="text-muted mb-4">AI-powered studying, made simple.</p>
+            <div class="card border-0 shadow-sm mb-4 animate-slide-up">
+                <div class="card-body p-4">
+                    <h6 class="fw-semibold">Our Mission</h6>
+                    <p class="small text-muted" style="line-height:1.7">Chhohreivung helps students study smarter, not harder. Upload your notes and let AI generate MCQs, flashcards, summaries, and practice tests — all in seconds.</p>
+                    <h6 class="fw-semibold mt-4">What We Offer</h6>
+                    <ul class="small text-muted" style="line-height:1.8">
+                        <li>Upload PDF/DOCX notes and extract text</li>
+                        <li>Generate multiple-choice, short, and long questions</li>
+                        <li>Create digital flashcards with spaced repetition</li>
+                        <li>AI-powered summaries of any study material</li>
+                        <li>Timed practice tests with instant scoring</li>
+                        <li>Community to share and discover study materials</li>
+                    </ul>
+                    <h6 class="fw-semibold mt-4">Technology</h6>
+                    <p class="small text-muted" style="line-height:1.7">Built with Django, PostgreSQL, and AI (Groq/Llama). Free to start with 5 AI generations daily.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

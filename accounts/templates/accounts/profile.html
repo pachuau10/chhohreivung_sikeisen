@@ -1,0 +1,78 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Profile - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm overflow-hidden animate-slide-up mb-4">
+                <div style="height:120px;background:linear-gradient(135deg,var(--primary),#A78BFA,#7C3AED)"></div>
+                <div class="px-4 pb-4" style="margin-top:-48px">
+                    <div class="d-flex flex-column flex-sm-row align-items-center gap-3">
+                        <div class="avatar flex-shrink-0 border border-3 border-white shadow-sm" style="width:96px;height:96px;font-size:2rem;background:linear-gradient(135deg,var(--primary),#A78BFA)">
+                            {% if user.profile.avatar %}<img src="{{ user.profile.avatar.url }}" alt="">{% elif user.profile.avatar_url %}<img src="{{ user.profile.avatar_url }}" alt="">{% else %}{{ user.email|first|upper }}{% endif %}
+                        </div>
+                        <div class="text-center text-sm-start mt-2 mt-sm-0">
+                            <h5 class="fw-bold mb-0">{{ user.get_full_name|default:user.username }}</h5>
+                            <div class="d-flex align-items-center gap-2 flex-wrap justify-content-center justify-content-sm-start mt-1">
+                                <span class="badge rounded-pill {% if user.profile.plan == 'premium' %}bg-info{% elif user.profile.plan == 'pro' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{{ user.profile.get_plan_display }}</span>
+                                <span class="text-muted small">{{ user.email }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-4"><div class="card border-0 shadow-sm text-center py-3"><h5 class="fw-bold mb-0 text-primary">{{ uploaded_notes }}</h5><small class="text-muted">Notes</small></div></div>
+                <div class="col-4"><div class="card border-0 shadow-sm text-center py-3"><h5 class="fw-bold mb-0 text-primary">{{ downloads }}</h5><small class="text-muted">Downloads</small></div></div>
+                <div class="col-4"><div class="card border-0 shadow-sm text-center py-3"><h5 class="fw-bold mb-0 text-primary">{{ bookmarks }}</h5><small class="text-muted">Saved</small></div></div>
+            </div>
+
+            <div class="card border-0 shadow-sm animate-slide-up">
+                <div class="card-header bg-white d-flex align-items-center gap-2"><div class="rounded-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;background:var(--primary-light)"><i class="bi bi-pencil-fill text-primary small"></i></div><h6 class="fw-semibold mb-0">Edit Profile</h6></div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" name="first_name" value="{{ form.first_name.value|default:'' }}" class="form-control" placeholder="Your first name">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" name="last_name" value="{{ form.last_name.value|default:'' }}" class="form-control" placeholder="Your last name">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" value="{{ form.email.value|default:'' }}" class="form-control" placeholder="your@email.com">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Bio</label>
+                                <textarea name="bio" rows="3" class="form-control" placeholder="Tell us about yourself...">{{ form.bio.value|default:'' }}</textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Profile Picture</label>
+                                <div class="d-flex align-items-center gap-3 flex-wrap">
+                                    <div class="avatar flex-shrink-0 border" style="width:72px;height:72px;font-size:1.2rem;background:linear-gradient(135deg,var(--primary),#A78BFA)">
+                                        {% if user.profile.avatar %}<img src="{{ user.profile.avatar.url }}" alt="">{% elif user.profile.avatar_url %}<img src="{{ user.profile.avatar_url }}" alt="">{% else %}{{ user.email|first|upper }}{% endif %}
+                                        <img id="avatar-preview" class="d-none" style="width:100%;height:100%;object-fit:cover" alt="Preview">
+                                    </div>
+                                    <div>
+                                        <input type="file" name="avatar" class="form-control form-control-sm" accept="image/*" onchange="var f=this.files[0];if(f){var r=new FileReader();r.onload=function(e){var p=document.getElementById('avatar-preview');p.src=e.target.result;p.classList.remove('d-none');p.parentElement.querySelector('img:not(#avatar-preview)')?.classList.add('d-none');p.parentElement.querySelector('span')?.classList.add('d-none')};r.readAsDataURL(f)}">
+                                        <small class="text-muted d-block mt-1">Max 2MB. Leave empty to keep current.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4"><i class="bi bi-check-lg me-1"></i>Save Changes</button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary rounded-pill px-3"><i class="bi bi-x-lg me-1"></i>Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

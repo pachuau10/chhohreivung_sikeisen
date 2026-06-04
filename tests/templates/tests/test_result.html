@@ -1,0 +1,22 @@
+{% extends 'core/base.html' %}
+{% block title %}Test Result - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm text-center mb-4">
+                <div class="card-body py-4">
+                    <div class="progress-ring mx-auto mb-3" style="--progress: {{ attempt.percentage }}%"><div class="progress-ring-inner"><h3 class="fw-bold mb-0 {% if attempt.percentage >= 70 %}text-success{% elif attempt.percentage >= 40 %}text-warning{% else %}text-danger{% endif %}">{{ attempt.percentage }}%</h3></div></div>
+                    <h5 class="fw-bold">{{ attempt.test.title }}</h5>
+                    <p class="text-muted small"><i class="bi bi-check-circle text-success me-1"></i>{{ attempt.correct_count }}/{{ attempt.total_questions }} &bull; <i class="bi bi-clock me-1"></i>{{ attempt.time_taken_seconds }}s</p>
+                    <div class="d-flex justify-content-center gap-2"><a href="{% url 'test_history' %}" class="btn btn-outline-primary btn-sm">History</a><a href="{% url 'note_list' %}" class="btn btn-primary btn-sm">Try Again</a></div>
+                </div>
+            </div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white"><h6 class="fw-semibold mb-0"><i class="bi bi-arrow-counterclockwise me-1 text-primary"></i>Review</h6></div>
+                <div class="card-body">{% for question in questions %}<div class="mb-2 p-3 border rounded-3"><p class="fw-medium small mb-2">{{ forloop.counter }}. {{ question.question_text }}</p>{% if question.options %}<div class="small ms-2">{% for opt in question.options %}<div class="py-1">{% if forloop.counter0|stringformat:"s" == question.correct_answer %}<strong class="text-success"><i class="bi bi-check-circle-fill me-1"></i>{{ opt }}</strong>{% else %}{{ opt }}{% endif %}</div>{% endfor %}</div>{% endif %}{% if question.explanation %}<div class="mt-1 small text-muted"><i class="bi bi-info-circle me-1"></i>{{ question.explanation }}</div>{% endif %}</div>{% endfor %}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

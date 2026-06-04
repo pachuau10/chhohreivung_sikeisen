@@ -1,0 +1,67 @@
+{% extends 'core/base.html' %}
+{% block title %}Contact - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <h3 class="fw-bold mb-2">Contact Us</h3>
+            <p class="text-muted mb-4">Have a question or feedback? We'd love to hear from you.</p>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100 animate-slide-up">
+                        <div class="card-body p-4 text-center">
+                            <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;background:#25D36620">
+                                <i class="bi bi-whatsapp fs-3" style="color:#25D366"></i>
+                            </div>
+                            <h6 class="fw-semibold">WhatsApp</h6>
+                            <p class="small text-muted mb-2">Chat with us on WhatsApp for quick support.</p>
+                            <a href="https://wa.me/919362603236" target="_blank" class="btn btn-success btn-sm rounded-pill px-3" style="background:#25D366;border:none"><i class="bi bi-whatsapp me-1"></i>Chat Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100 animate-slide-up">
+                        <div class="card-body p-4 text-center">
+                            <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;background:var(--primary-light)">
+                                <i class="bi bi-envelope fs-3 text-primary"></i>
+                            </div>
+                            <h6 class="fw-semibold">Email</h6>
+                            <p class="small text-muted mb-2">Send us an email and we'll respond within 24h.</p>
+                            <a href="mailto:chhohreivung.tech@gmail.com" class="btn btn-outline-primary btn-sm rounded-pill px-3"><i class="bi bi-envelope me-1"></i>chhohreivung.tech@gmail.com</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm animate-slide-up">
+                <div class="card-body p-4">
+                    <h6 class="fw-semibold mb-3">Or send us a message</h6>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Name</label>
+                                <input type="text" name="name" class="form-control" required maxlength="100" value="{{ form.name.value|default:'' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" required value="{{ form.email.value|default:'' }}">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Subject</label>
+                                <input type="text" name="subject" class="form-control" required maxlength="200" value="{{ form.subject.value|default:'' }}">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Message</label>
+                                <textarea name="message" class="form-control" rows="5" required>{{ form.message.value|default:'' }}</textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

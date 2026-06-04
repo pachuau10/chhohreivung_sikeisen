@@ -1,0 +1,216 @@
+{% extends 'core/base.html' %}
+{% block title %}Community - Chhohreivung{% endblock %}
+{% block meta_description %}Join the Chhohreivung community. Share study notes, discuss topics, and collaborate with fellow students.{% endblock %}
+{% block extra_head %}
+<style>
+@media (max-width:576px){.post-img{max-height:220px!important}}
+.fab-post{position:fixed;bottom:80px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#A78BFA);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 4px 16px rgba(124,58,237,0.4);z-index:999;border:none;transition:transform .2s}.fab-post:hover{transform:scale(1.1);color:#fff}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-11 col-md-9 col-lg-7">
+
+            <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between mb-4 gap-2">
+                <div>
+                    <h5 class="fw-bold mb-0"><i class="bi bi-people-fill me-2 text-primary"></i>Community</h5>
+                    <p class="text-muted small mb-0">Discover notes and share your knowledge</p>
+                </div>
+                <span class="badge bg-light text-muted px-3 py-2 rounded-pill flex-shrink-0">{{ plan|title }} · {% if user.is_staff or plan != 'free' %}Unlimited{% else %}{{ generations_remaining }} gen left{% endif %}</span>
+            </div>
+
+            <!-- Post FAB -->
+            <button class="fab-post" data-bs-toggle="modal" data-bs-target="#postModal"><i class="bi bi-plus-lg"></i></button>
+
+            <!-- Post Modal -->
+            <div class="modal fade" id="postModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-sm">
+                    <div class="modal-content border-0 shadow-lg" style="border-radius:16px">
+                        <div class="modal-header border-0 pb-0">
+                            <h6 class="fw-bold">Create Post</h6>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body px-4">
+                            <form method="post" action="{% url 'post_create' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <textarea name="content" rows="3" placeholder="What's on your mind?" class="form-control border-0 bg-light rounded-4 mb-3" style="resize:none;font-size:.9rem">{{ post_form.content.value|default:'' }}</textarea>
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <label for="id_image_modal" class="btn btn-sm rounded-pill px-3" style="background:var(--bg);border:1px solid var(--border);font-size:.8rem;cursor:pointer"><i class="bi bi-image me-1 text-primary"></i>Image</label>
+                                    <input type="file" name="image" id="id_image_modal" accept="image/*" class="d-none" onchange="var f=this.files[0];if(f)this.parentElement.querySelector('.img-name-modal').textContent=f.name">
+                                    <small class="img-name-modal text-muted" style="font-size:.75rem"></small>
+                                </div>
+                                <select name="shared_note" class="form-select form-select-sm border-0 bg-light rounded-3 mb-3" style="font-size:.82rem;color:var(--text-muted)">
+                                    <option value="">-- Attach a note (optional) --</option>
+                                    {% for note in user.notes.all %}
+                                    <option value="{{ note.id }}">{{ note.title|truncatechars:30 }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="d-grid"><button type="submit" class="btn btn-primary rounded-pill"><i class="bi bi-send me-1"></i>Post</button></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if items %}
+            {% for item in items %}
+             <div class="card border-0 shadow-sm rounded-4 mb-3">
+                <div class="card-body p-3">
+                    <div class="d-flex gap-2 gap-sm-3">
+                        <div class="flex-shrink-0 d-none d-sm-block">
+                            <div class="avatar-sm" style="background:linear-gradient(135deg,#10B981,#34D399)">{% with p=item.user.profile %}{% if p.avatar %}<img src="{{ p.avatar.url }}" alt="">{% elif p.avatar_url %}<img src="{{ p.avatar_url }}" alt="">{% else %}{{ item.user.username|first|upper }}{% endif %}{% endwith %}</div>
+                        </div>
+                        <div class="flex-grow-1" style="min-width:0">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <div class="avatar-sm d-sm-none" style="width:28px;height:28px;font-size:.65rem;background:linear-gradient(135deg,#10B981,#34D399)">{% with p=item.user.profile %}{% if p.avatar %}<img src="{{ p.avatar.url }}" alt="">{% elif p.avatar_url %}<img src="{{ p.avatar_url }}" alt="">{% else %}{{ item.user.username|first|upper }}{% endif %}{% endwith %}</div>
+                                <span class="fw-semibold small">{{ item.user.username }}</span>
+                                <span class="text-muted" style="font-size:.7rem">&middot; {{ item.created_at|timesince }} ago</span>
+                            </div>
+                            <p class="mb-2" style="font-size:.9rem;line-height:1.55;white-space:pre-wrap">{{ item.content }}</p>
+                            {% if item.image %}
+                            <div class="rounded-3 overflow-hidden mb-2">
+                                <img src="{{ item.image.url }}" class="w-100 post-img" style="max-height:400px;object-fit:cover" alt="Post image">
+                            </div>
+                            {% endif %}
+                            {% if item.shared_note %}
+                            {% if not user.is_staff and user.profile.plan == 'free' and item.shared_summary %}
+                            <div class="p-3 rounded-3 mb-2" style="background:var(--bg)">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-file-earmark-text fs-5 text-primary flex-shrink-0"></i>
+                                    <span class="fw-semibold small text-dark">{{ item.shared_note.title }}</span>
+                                </div>
+                                <p class="small text-muted mb-2" style="line-height:1.5">{{ item.shared_summary }}</p>
+                                <a href="{% url 'pricing' %}" class="btn btn-primary btn-sm rounded-pill px-3"><i class="bi bi-star me-1"></i>Upgrade to view full note</a>
+                            </div>
+                            {% else %}
+                            <a href="{% url 'note_detail' item.shared_note.pk %}" class="d-flex align-items-center gap-2 p-3 rounded-3 text-decoration-none mb-2" style="background:var(--bg)">
+                                <i class="bi bi-file-earmark-text fs-4 text-primary flex-shrink-0"></i>
+                                <div style="min-width:0" class="flex-grow-1">
+                                    <div class="fw-medium text-dark small text-truncate">{{ item.shared_note.title }}</div>
+                                    <div class="d-flex gap-2 text-muted flex-wrap" style="font-size:.72rem">
+                                        <span>{{ item.shared_note.file_type|upper }}</span>
+                                        <span>{{ item.shared_note.page_count }}p</span>
+                                        {% if item.shared_note.subject %}<span>{{ item.shared_note.subject.name }}</span>{% endif %}
+                                    </div>
+                                </div>
+                                <i class="bi bi-box-arrow-up-right text-muted flex-shrink-0"></i>
+                            </a>
+                            {% endif %}
+                            {% endif %}
+                            <div class="d-flex align-items-center gap-1 pt-2 border-top flex-wrap">
+                                <button class="btn btn-sm d-flex align-items-center gap-1 px-3 py-1 rounded-pill post-like-btn {% if item.id in post_liked_ids %}text-danger{% else %}text-muted{% endif %}" data-post-id="{{ item.pk }}" style="background:transparent;border:none;font-size:.82rem">
+                                    <i class="bi bi-heart{% if item.id in post_liked_ids %}-fill{% endif %} fs-6"></i> <span class="like-count">{{ item.like_count }}</span>
+                                </button>
+                                <button class="btn btn-sm d-flex align-items-center gap-1 px-3 py-1 rounded-pill text-muted post-comment-toggle" data-post-id="{{ item.pk }}" style="background:transparent;border:none;font-size:.82rem">
+                                    <i class="bi bi-chat fs-6"></i> <span>{{ item.comment_count }}</span>
+                                </button>
+                            </div>
+                            <div class="post-comments-section d-none mt-2 pt-2 border-top" data-post-id="{{ item.pk }}">
+                                <div class="comment-list">
+                                    {% for comment in item.comments.all %}
+                                    <div class="d-flex gap-2 mb-3">
+                                        <div class="flex-shrink-0 rounded-circle overflow-hidden d-flex align-items-center justify-content-center" style="width:32px;height:32px;font-size:.7rem;font-weight:600;background:var(--bg);color:var(--text-muted)">{% with p=comment.user.profile %}{% if p.avatar %}<img src="{{ p.avatar.url }}" alt="" style="width:100%;height:100%;object-fit:cover">{% elif p.avatar_url %}<img src="{{ p.avatar_url }}" alt="" style="width:100%;height:100%;object-fit:cover">{% else %}{{ comment.user.username|first|upper }}{% endif %}{% endwith %}</div>
+                                        <div class="flex-grow-1">
+                                            <div class="bg-light rounded-3 px-3 py-2">
+                                                <span class="fw-semibold small">{{ comment.user.username }}</span>
+                                                <p class="small mb-0 text-muted" style="line-height:1.4">{{ comment.content }}</p>
+                                            </div>
+                                            <small class="text-muted px-1" style="font-size:.65rem">{{ comment.created_at|timesince }} ago</small>
+                                        </div>
+                                    </div>
+                                    {% empty %}
+                                    <p class="small text-muted mb-3">No comments yet.</p>
+                                    {% endfor %}
+                                </div>
+                                <form class="post-comment-form" data-post-id="{{ item.pk }}">
+                                    {% csrf_token %}
+                                    <div class="d-flex gap-2">
+                                        <input type="text" class="form-control form-control-sm rounded-pill bg-light border-0" placeholder="Write a comment..." required>
+                                        <button class="btn btn-primary btn-sm rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" type="submit" style="width:36px;height:36px"><i class="bi bi-send"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if page_obj.num_pages > 1 %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link rounded-pill mx-1" href="?page={{ page_obj.previous_page_number }}"><i class="bi bi-chevron-left d-sm-none"></i><span class="d-none d-sm-inline">Previous</span></a></li>
+                    {% endif %}
+                    <li class="page-item disabled"><span class="page-link border-0 bg-transparent">{{ page_obj.number }} / {{ page_obj.num_pages }}</span></li>
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link rounded-pill mx-1" href="?page={{ page_obj.next_page_number }}"><i class="bi bi-chevron-right d-sm-none"></i><span class="d-none d-sm-inline">Next</span></a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            {% else %}
+            <div class="text-center py-5">
+                <div class="mx-auto rounded-circle bg-light d-flex align-items-center justify-content-center mb-3" style="width:72px;height:72px">
+                    <i class="bi bi-inbox fs-2 text-muted"></i>
+                </div>
+                <h6 class="fw-semibold">No activity yet</h6>
+                <p class="small text-muted">Be the first to share something!</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+document.querySelectorAll('.post-comment-toggle').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var section = this.closest('.card-body').querySelector('.post-comments-section');
+        if (section) section.classList.toggle('d-none');
+    });
+});
+document.querySelectorAll('.post-comment-form').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var input = this.querySelector('input');
+        var postId = this.dataset.postId;
+        var list = this.closest('.post-comments-section').querySelector('.comment-list');
+        fetch('/community/post/' + postId + '/comment/', {
+            method: 'POST',
+            headers: {'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value},
+            body: new URLSearchParams({content: input.value})
+        }).then(function(r) { return r.json(); }).then(function(d) {
+            if (d.success) {
+                input.value = '';
+                var empty = list.querySelector('p.text-muted');
+                if (empty) empty.remove();
+                var el = document.createElement('div');
+                el.className = 'd-flex gap-2 mb-3';
+                var avatarHtml = d.avatar ? '<img src="' + d.avatar + '" alt="" style="width:100%;height:100%;object-fit:cover">' : d.user.charAt(0).toUpperCase(); el.innerHTML = '<div class="flex-shrink-0 rounded-circle overflow-hidden d-flex align-items-center justify-content-center" style="width:32px;height:32px;font-size:.7rem;font-weight:600;background:var(--bg);color:var(--text-muted)">' + avatarHtml + '</div><div class="flex-grow-1"><div class="bg-light rounded-3 px-3 py-2"><span class="fw-semibold small">' + d.user + '</span><p class="small mb-0 text-muted" style="line-height:1.4">' + d.content + '</p></div><small class="text-muted px-1" style="font-size:.65rem">just now</small></div>';
+                list.appendChild(el);
+            } else if (d.error) {
+                showToast(d.error, 'danger');
+            }
+        }).catch(function() {});
+    });
+});
+document.body.addEventListener('click', function(e) {
+    var like = e.target.closest('.post-like-btn');
+    if (like) {
+        e.preventDefault();
+        var postId = like.dataset.postId;
+        fetch('/community/post/' + postId + '/like/', { method:'POST', headers:{'X-CSRFToken': getCsrf()} })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            like.classList.toggle('text-danger', d.liked);
+            like.querySelector('i').className = d.liked ? 'bi bi-heart-fill' : 'bi bi-heart';
+            var ct = like.querySelector('.like-count');
+            if (ct) ct.textContent = d.count;
+        }).catch(function(){});
+    }
+});
+</script>
+{% endblock %}

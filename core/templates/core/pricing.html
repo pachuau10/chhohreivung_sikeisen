@@ -1,0 +1,127 @@
+{% extends 'core/base.html' %}
+{% block title %}Pricing - Chhohreivung{% endblock %}
+{% block meta_description %}Chhohreivung pricing. Free plan includes 5 AI generations per day. Premium at ₹199/mo unlocks unlimited AI generations and downloads.{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h3 class="fw-bold">Choose Your Plan</h3>
+        <p class="text-muted">Unlock more AI generations and features as you upgrade.</p>
+    </div>
+    <div class="row justify-content-center g-4">
+        <div class="col-md-5 col-lg-4">
+            <div class="card border-0 shadow-sm h-100 animate-slide-up" style="border-radius:16px">
+                <div class="card-body p-4 text-center">
+                    <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;background:var(--bg)">
+                        <i class="bi bi-gift fs-3 text-muted"></i>
+                    </div>
+                    <h5 class="fw-bold">Free</h5>
+                    <div class="my-3"><span class="fs-1 fw-bold">₹0</span><span class="text-muted">/month</span></div>
+                    <ul class="list-unstyled small text-muted text-start mb-4" style="line-height:2">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>5 AI generations / day</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>5 note uploads / day</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Basic flashcards & MCQs</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Community access</li>
+                    </ul>
+                    {% if user.is_authenticated and current_plan == 'free' %}
+                        <span class="btn btn-outline-secondary btn-sm disabled w-100 rounded-pill">Current Plan</span>
+                    {% elif user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-primary btn-sm w-100 rounded-pill">Go to Dashboard</a>
+                    {% else %}
+                        <a href="{% url 'account_signup' %}" class="btn btn-outline-primary btn-sm w-100 rounded-pill">Get Started</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 col-lg-4">
+            <div class="card border-0 shadow-sm h-100 animate-slide-up position-relative" style="border-radius:16px;border:2px solid var(--primary)!important">
+                <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary px-3" style="font-size:.65rem">POPULAR</span>
+                <div class="card-body p-4 text-center">
+                    <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;background:var(--primary-light)">
+                        <i class="bi bi-star fs-3 text-primary"></i>
+                    </div>
+                    <h5 class="fw-bold">Premium</h5>
+                    <div class="my-3"><span class="fs-1 fw-bold">₹199</span><span class="text-muted">/month</span></div>
+                    <ul class="list-unstyled small text-muted text-start mb-4" style="line-height:2">
+                        <li><i class="bi bi-check-circle text-success me-2"></i><strong>Unlimited</strong> AI generations</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i><strong>Unlimited</strong> note uploads</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Advanced flashcards & MCQs</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Priority support</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Premium badge</li>
+                    </ul>
+                    {% if user.is_authenticated and current_plan == 'premium' and has_active_subscription %}
+                        <span class="btn btn-primary btn-sm disabled w-100 rounded-pill">Active</span>
+                    {% elif user.is_authenticated %}
+                        <button class="btn btn-primary btn-sm w-100 rounded-pill" id="premiumBtn" onclick="startPayment('premium')"><i class="bi bi-lightning me-1"></i>Upgrade to Premium</button>
+                    {% else %}
+                        <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm w-100 rounded-pill">Sign Up to Upgrade</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+{% if razorpay_key_id %}
+<script>
+function loadRazorpay(callback) {
+    if (typeof Razorpay !== 'undefined') { callback(); return; }
+    var s = document.createElement('script');
+    s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    s.onload = callback;
+    s.onerror = function() { alert('Failed to load payment gateway. Check your internet connection.'); };
+    document.head.appendChild(s);
+}
+function startPayment(plan) {
+    var btn = document.getElementById('premiumBtn');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Processing...';
+    loadRazorpay(function() {
+        fetch('{% url "create_order" %}', {
+            method: 'POST',
+            headers: {'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'plan=' + plan
+        }).then(function(r) {
+            if (!r.ok) { return r.text().then(function(t) { throw new Error('Server returned ' + r.status + ': ' + t.substring(0,100)); }); }
+            return r.json();
+        }).then(function(order) {
+            var options = {
+                key: order.key_id,
+                amount: order.amount,
+                currency: order.currency,
+                name: order.name,
+                description: order.description,
+                order_id: order.order_id,
+                prefill: { email: order.prefill_email, name: order.prefill_name },
+                handler: function(response) {
+                    fetch('{% url "verify_payment" %}', {
+                        method: 'POST',
+                        headers: {'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: 'razorpay_payment_id=' + response.razorpay_payment_id + '&razorpay_order_id=' + response.razorpay_order_id + '&razorpay_signature=' + response.razorpay_signature
+                    }).then(function(r) { return r.json(); }).then(function(d) {
+                        if (d.success) {
+                            window.location.href = '{% url "dashboard" %}?upgraded=1';
+                        } else {
+                            alert('Payment verification failed. Contact support.');
+                            btn.disabled = false; btn.innerHTML = '<i class="bi bi-lightning me-1"></i>Upgrade to Premium';
+                        }
+                    });
+                },
+                modal: { ondismiss: function() { btn.disabled = false; btn.innerHTML = '<i class="bi bi-lightning me-1"></i>Upgrade to Premium'; } }
+            };
+            try {
+                var rzp = new Razorpay(options);
+                rzp.open();
+            } catch(e) {
+                alert('Payment gateway error: ' + e.message);
+                btn.disabled = false; btn.innerHTML = '<i class="bi bi-lightning me-1"></i>Upgrade to Premium';
+            }
+        }).catch(function(e) {
+            alert('Error: ' + (e && e.message ? e.message : 'Could not create payment order'));
+            console.error('Payment error:', e);
+            btn.disabled = false; btn.innerHTML = '<i class="bi bi-lightning me-1"></i>Upgrade to Premium';
+        });
+    });
+}
+</script>
+{% endif %}
+{% endblock %}

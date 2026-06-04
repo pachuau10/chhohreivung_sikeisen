@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %}
+{% block title %}Test History - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div><h4 class="fw-bold mb-1">Test History</h4><p class="text-muted small mb-0">Your past attempts</p></div>
+        <a href="{% url 'note_list' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>New Test</a>
+    </div>
+    {% if attempts %}
+    <div class="row g-3">
+        {% for attempt in attempts %}
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm"><div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div><h6 class="fw-semibold mb-1">{{ attempt.test.title }}</h6><small class="text-muted">{{ attempt.completed_at|date:"M d, Y" }}</small></div>
+                    <div class="text-end"><h5 class="fw-bold mb-0 {% if attempt.percentage >= 70 %}text-success{% elif attempt.percentage >= 40 %}text-warning{% else %}text-danger{% endif %}">{{ attempt.percentage }}%</h5><small class="text-muted">{{ attempt.correct_count }}/{{ attempt.total_questions }}</small></div>
+                </div>
+                <div class="progress mt-2 rounded-pill" style="height:6px"><div class="progress-bar rounded-pill {% if attempt.percentage >= 70 %}bg-success{% elif attempt.percentage >= 40 %}bg-warning{% else %}bg-danger{% endif %}" style="width:{{ attempt.percentage }}%"></div></div>
+                <div class="d-flex justify-content-between align-items-center mt-2"><small class="text-muted"><i class="bi bi-clock me-1"></i>{{ attempt.time_taken_seconds }}s</small><a href="{% url 'test_result' attempt.pk %}" class="btn btn-outline-primary btn-sm">Review</a></div>
+            </div></div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if page_obj.paginator.num_pages > 1 %}<nav class="mt-4"><ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page=1">&laquo;</a></li><li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>{% endif %}
+        <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li><li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a></li>{% endif %}
+    </ul></nav>{% endif %}
+    {% else %}
+    <div class="text-center py-5"><p class="text-muted">No attempts yet.</p><a href="{% url 'note_list' %}" class="btn btn-primary btn-sm">Create Your First Test</a></div>
+    {% endif %}
+</div>
+{% endblock %}

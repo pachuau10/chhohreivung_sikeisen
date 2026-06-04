@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+{% block title %}Connected Accounts - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-link-45deg me-2 text-primary"></i>Connected Accounts</h5>
+                    {% if form.accounts %}
+                    <p class="small text-muted mb-3">You can sign in to your account using any of these third-party accounts.</p>
+                    <form method="post" action="{{ action_url }}">
+                        {% csrf_token %}
+                        {% for base_account in form.accounts %}
+                        {% with base_account.get_provider_account as account %}
+                        <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-2" style="background:var(--bg)">
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="bi bi-google fs-5 text-muted"></i>
+                                <div><span class="fw-medium small">{{ account }}</span><small class="d-block text-muted" style="font-size:.75rem">{{ base_account.provider|title }}</small></div>
+                            </div>
+                            <label class="d-flex align-items-center gap-2 small">
+                                <input type="radio" name="account" value="{{ base_account.pk }}" checked>
+                            </label>
+                        </div>
+                        {% endwith %}
+                        {% endfor %}
+                        <div class="d-grid mt-3"><button type="submit" class="btn btn-danger btn-sm rounded-pill" name="action_remove">Remove</button></div>
+                    </form>
+                    {% else %}
+                    <p class="small text-muted mb-0">No third-party accounts connected.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}Chhohreivung - AI-Powered Study Platform. Upload notes, generate MCQs, flashcards, summaries, and practice tests with AI.{% endblock %}">
+    <meta name="keywords" content="study, notes, AI, flashcards, MCQs, practice tests, learning">
+    <meta name="author" content="Chhohreivung">
+    <meta property="og:title" content="{% block og_title %}Chhohreivung - AI Study Platform{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Upload notes, generate MCQs, flashcards, summaries, and practice tests with AI.{% endblock %}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:image" content="{% block og_image %}{{ SITE_URL }}{% static 'og-image.png' %}{% endblock %}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ SITE_URL }}{% static 'og-image.png' %}{% endblock %}">
+    <link rel="icon" type="image/png" href="{% static 'logo.png' %}">
+    <meta name="twitter:title" content="{% block twitter_title %}Chhohreivung - AI Study Platform{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Upload notes, generate MCQs, flashcards, summaries, and practice tests with AI.{% endblock %}">
+    <title>{% block title %}Chhohreivung - AI Study Platform{% endblock %}</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box}
+        :root{
+            --primary:#7C3AED;--primary-hover:#6D28D9;--primary-light:rgba(124,58,237,0.08);--primary-glow:rgba(124,58,237,0.25);
+            --bg:#F8FAFC;--bg-card:#FFFFFF;--text:#0F172A;--text-muted:#64748B;--border:#E2E8F0;
+            --shadow:0 1px 2px rgba(0,0,0,0.05);--shadow-md:0 4px 6px rgba(0,0,0,0.07);--shadow-lg:0 10px 25px rgba(0,0,0,0.1);
+            --radius:12px;--radius-sm:8px;
+            --bg-hover:#F1F5F9;--footer-bg:#0F172A;--footer-text:#94A3B8;
+        }
+        [data-theme="dark"]{
+            --bg:#0F172A;--bg-card:#1E293B;--text:#E2E8F0;--text-muted:#94A3B8;--border:#334155;
+            --shadow:0 1px 2px rgba(0,0,0,0.2);--shadow-md:0 4px 6px rgba(0,0,0,0.3);--shadow-lg:0 10px 25px rgba(0,0,0,0.4);
+            --primary-light:rgba(124,58,237,0.15);
+            --bg-hover:#334155;--footer-bg:#020617;--footer-text:#64748B;
+            --bs-card-bg:var(--bg-card);--bs-body-bg:var(--bg);--bs-body-color:var(--text);--bs-offcanvas-bg:var(--bg-card);
+        }
+        [data-theme="dark"] .navbar-toggler-icon{filter:invert(1)}
+        [data-theme="dark"] .navbar-toggler{border-color:var(--border)}
+        [data-theme="dark"] .card-header.bg-white{background:transparent!important}
+        [data-theme="dark"] .bg-white{background:var(--bg-card)!important}
+        [data-theme="dark"] .bg-light{background:var(--bg-hover)!important;color:var(--text-muted)}
+        [data-theme="dark"] .bg-dark{background:var(--bg-card)!important}
+        [data-theme="dark"] .text-dark{color:var(--text)!important}
+        [data-theme="dark"] .btn-light{background:var(--bg-hover);border-color:var(--border);color:var(--text)}
+        [data-theme="dark"] .btn-light:hover{background:var(--border);color:var(--text)}
+        [data-theme="dark"] .page-link{background:var(--bg-card);border-color:var(--border);color:var(--text)}
+        [data-theme="dark"] .page-link:hover{background:var(--bg-hover);color:var(--primary)}
+        [data-theme="dark"] .modal-content{background:var(--bg-card);border-color:var(--border)}
+        [data-theme="dark"] .flashcard-front{background:var(--bg-card)}
+        [data-theme="dark"] .accordion-button{background:transparent!important;color:var(--text)!important}
+        [data-theme="dark"] .accordion-button:not(.collapsed){color:var(--primary)!important}
+        [data-theme="dark"] .accordion-button::after{filter:invert(1)}
+        [data-theme="dark"] .list-group-item{border-color:var(--border)!important}
+        [data-theme="dark"] .offcanvas{background:var(--bg-card)!important}
+        [data-theme="dark"] .offcanvas .btn-close{filter:invert(1)}
+        [data-theme="dark"] .offcanvas a:not(.btn){color:var(--text-muted)!important}
+        [data-theme="dark"] .offcanvas a:not(.btn):hover{color:var(--primary)!important}
+        [data-theme="dark"] .offcanvas .nav-offcanvas-link span{color:var(--text)!important}
+        [data-theme="dark"] .offcanvas .nav-offcanvas-link:hover span{color:var(--primary)!important}
+        [data-theme="dark"] .offcanvas .text-dark{color:var(--text)!important}
+        [data-theme="dark"] .offcanvas .text-muted{color:var(--text-muted)!important}
+        [data-theme="dark"] .text-muted{color:var(--text-muted)!important}
+        [data-theme="dark"] .text-secondary{color:var(--text-muted)!important}
+        [data-theme="dark"] .text-body{color:var(--text)!important}
+        [data-theme="dark"] a:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link){color:var(--primary)}
+        [data-theme="dark"] a:hover:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link){color:var(--primary-hover)}
+        [data-theme="dark"] .text-primary{color:var(--primary)!important}
+        html{scroll-behavior:smooth}
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+        ::selection{background:var(--primary);color:#fff}
+        main{flex:1}
+
+        .navbar{background:var(--bg-card)!important;backdrop-filter:blur(16px) saturate(180%);border-bottom:1px solid var(--border);background-color:color-mix(in srgb,var(--bg-card) 80%,transparent)!important}
+        .navbar-brand{font-weight:800;font-size:1.35rem;background:linear-gradient(135deg,var(--primary),#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .nav-link{font-weight:500!important;color:var(--text-muted)!important;padding:0.35rem 0.75rem!important;border-radius:6px;transition:all .2s;font-size:.875rem}
+        .nav-link:hover{color:var(--primary)!important;background:var(--primary-light)}
+        .navbar .btn{font-size:.8125rem;padding:.35rem 1rem;border-radius:6px}
+
+        .btn{font-weight:600;padding:.55rem 1.25rem;border-radius:8px;transition:all .2s;font-size:.875rem}
+        .btn-primary{background:var(--primary);border:none;color:#fff}
+        .btn-primary:hover{background:var(--primary-hover)}
+        .btn-outline-primary{color:var(--primary);border:1.5px solid var(--primary)}
+        .btn-outline-primary:hover{background:var(--primary);color:#fff}
+        .btn-outline-dark{border:1.5px solid var(--border);color:var(--text)}
+        .btn-outline-dark:hover{background:var(--bg);border-color:var(--text-muted)}
+        .btn-sm{font-size:.8125rem;padding:.3rem .8rem}
+        .btn-success{background:#10B981;border:none;color:#fff}
+        .btn-success:hover{background:#059669}
+        .btn-danger{background:#EF4444;border:none;color:#fff}
+        .btn-danger:hover{background:#DC2626}
+        .btn-lg{padding:.75rem 1.75rem;font-size:1rem}
+
+        .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+        .card-header{background:transparent;border-bottom:1px solid var(--border);padding:.9rem 1.25rem}
+        .card-body{padding:1.25rem}
+        .card-footer{background:transparent;border-top:1px solid var(--border);padding:.9rem 1.25rem}
+
+        .form-label{font-weight:600;font-size:.8rem;color:var(--text);margin-bottom:.3rem}
+        input:not([type=radio]):not([type=checkbox]):not([type=file]):not([type=submit]):not([type=hidden]),select,textarea,.form-control,.form-select{border-radius:10px;border:1.5px solid var(--border);padding:.6rem 1rem;font-size:.9rem;transition:all .2s;background:var(--bg-card);box-shadow:inset 0 1px 2px rgba(0,0,0,.04);width:100%;color:var(--text);font-family:inherit;line-height:1.5}
+        input:not([type=radio]):not([type=checkbox]):not([type=file]):not([type=submit]):not([type=hidden]):hover,select:hover,textarea:hover,.form-control:hover,.form-select:hover{border-color:#94A3B8}
+        input:not([type=radio]):not([type=checkbox]):not([type=file]):not([type=submit]):not([type=hidden]):focus,select:focus,textarea:focus,.form-control:focus,.form-select:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light),inset 0 1px 2px rgba(0,0,0,.04);outline:none}
+        input::placeholder,textarea::placeholder{color:#94A3B8;opacity:.7}
+        textarea{min-height:90px;resize:vertical}
+        select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748B' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;background-size:12px;appearance:none;padding-right:2rem}
+        input[type=file]{padding:.4rem .6rem;border-radius:10px;border:1.5px dashed var(--border);background:var(--bg);cursor:pointer}
+        input[type=file]:hover{border-color:var(--primary)}
+        .input-group .input-group-text{background:var(--bg);border:1.5px solid var(--border);color:var(--text-muted);font-size:.875rem;border-radius:10px}
+
+        .badge{font-weight:500;border-radius:100px;font-size:.75rem;padding:.2rem .65rem}
+        .badge.bg-light{background:var(--bg)!important;color:var(--text-muted)}
+
+        h1,h2,h3,h4,h5,h6{letter-spacing:-.02em;font-weight:700}
+        a{color:var(--primary);text-decoration:none}
+        a:hover{color:var(--primary-hover)}
+
+        .hero-section{background:linear-gradient(135deg,#1E1B4B,#312E81,var(--primary));color:#fff;padding:100px 0 80px;position:relative;overflow:hidden}
+        .hero-section::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60px;background:var(--bg);clip-path:ellipse(70% 100% at 50% 100%)}
+
+        .stat-card{border-radius:var(--radius);padding:1.25rem;overflow:hidden}
+        .nav-offcanvas-link{transition:all .15s;border-radius:0;color:inherit}
+        .nav-offcanvas-link:hover{background:var(--primary-light)}
+        .nav-offcanvas-link:hover span{color:var(--primary)!important}
+        .stat-card .icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.15rem}
+        .note-item{transition:box-shadow .2s,transform .2s}
+        .note-item:hover{box-shadow:0 2px 12px rgba(0,0,0,.06);transform:translateY(-1px)}
+
+        .footer{background:var(--footer-bg);color:var(--footer-text);padding:40px 0 20px}
+        .footer h6{color:#F1F5F9;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem}
+        .footer a{color:#94A3B8;font-size:.85rem;display:inline-block;padding:2px 0}
+        .footer a:hover{color:#fff}
+        .footer hr{border-color:#1E293B}
+
+        .flashcard{perspective:1000px;cursor:pointer}
+        .flashcard-inner{position:relative;width:100%;height:200px;transition:transform .5s;transform-style:preserve-3d}
+        .flashcard.flipped .flashcard-inner{transform:rotateY(180deg)}
+        .flashcard-front,.flashcard-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;padding:16px;text-align:center}
+        .flashcard-front{background:#fff;border:1.5px solid var(--border)}
+        .flashcard-back{background:var(--primary);color:#fff;transform:rotateY(180deg)}
+        @media(max-width:576px){.flashcard-inner{height:160px}.flashcard-front,.flashcard-back{padding:12px;font-size:.85rem}}
+
+        .progress-ring{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:conic-gradient(var(--primary) var(--progress,0deg),var(--border) var(--progress,0deg))}
+        .progress-ring-inner{width:90px;height:90px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column}
+
+        .toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+        .toast{border-radius:10px;border:none;box-shadow:var(--shadow-lg)}
+
+        .list-group-item{border-color:var(--border);padding:.85rem 1.25rem;transition:background .15s}
+        .list-group-item:hover{background:var(--bg)}
+
+        .pagination .page-link{border:none;border-radius:8px;margin:0 2px;color:var(--text-muted);font-weight:500;padding:.35rem .75rem;font-size:.875rem;transition:all .15s}
+        .pagination .page-link:hover{background:var(--bg);color:var(--text)}
+        .pagination .active .page-link{background:var(--primary);color:#fff}
+
+        .breadcrumb{background:transparent;padding:0;margin-bottom:.75rem}
+        .breadcrumb-item{font-size:.85rem}
+        .breadcrumb-item a{color:var(--text-muted)}
+        .breadcrumb-item a:hover{color:var(--primary)}
+        .breadcrumb-item.active{color:var(--text)}
+
+        .alert{border:none;border-radius:10px;font-size:.875rem;padding:.75rem 1rem}
+        .alert-info{background:#EFF6FF;color:#1D4ED8}
+        .alert-success{background:#ECFDF5;color:#065F46}
+        .alert-danger{background:#FEF2F2;color:#991B1B}
+
+        .dropdown-menu{border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);padding:.35rem}
+        .dropdown-item{border-radius:6px;padding:.35rem .65rem;font-size:.85rem}
+        .dropdown-item:hover{background:var(--bg);color:var(--primary)}
+        .dropdown-item i{width:18px}
+
+        .progress{background:var(--border);border-radius:100px}
+        .progress-bar{border-radius:100px}
+
+        hr{opacity:1;border-color:var(--border)}
+
+        .empty-state{padding:3rem 1rem;text-align:center}
+        .empty-state .icon{width:72px;height:72px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+        .empty-state .icon i{font-size:1.75rem;color:var(--text-muted)}
+        .empty-state p{color:var(--text-muted);font-size:.9rem;margin-bottom:1rem}
+
+        .question-card{border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem;margin-bottom:.75rem;transition:border-color .15s}
+        .question-card:hover{border-color:var(--primary)}
+        @media(max-width:576px){.question-card{padding:.65rem}}
+
+        .upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:2.5rem;text-align:center;transition:all .2s;cursor:pointer}
+        .upload-zone:hover{border-color:var(--primary);background:var(--primary-light)}
+        .upload-zone.dragover{border-color:var(--primary);background:var(--primary-light)}
+
+        .avatar,.avatar-sm{position:relative;border-radius:50%;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff}
+        .avatar{width:72px;height:72px;font-size:1.5rem}
+        .avatar-sm{width:36px;height:36px;font-size:.9rem}
+        .avatar img,.avatar-sm img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+
+        .text-primary{color:var(--primary)!important}
+        .text-success{color:#10B981!important}
+        .text-warning{color:#F59E0B!important}
+        .text-danger{color:#EF4444!important}
+        .bg-primary{background-color:var(--primary)!important}
+
+        .hover-bg:hover{background:var(--bg)!important}
+        .cursor-pointer{cursor:pointer}
+        .transition-all{transition:all .2s}
+
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes scaleIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+        .animate-fade-in{animation:fadeIn .35s ease-out}
+        .animate-slide-up{animation:slideUp .35s ease-out}
+        .animate-scale{animation:scaleIn .25s ease-out}
+
+        .deck-card{perspective:1200px;cursor:pointer;max-width:520px;margin:0 auto}
+        .deck-card-inner{position:relative;width:100%;height:340px;transition:transform .5s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
+        .deck-card.flipped .deck-card-inner{transform:rotateY(180deg)}
+        .deck-card-front,.deck-card-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;padding:36px;text-align:center;font-size:1.05rem;line-height:1.6}
+        .deck-card-front{background:#fff;border:2px solid var(--border);box-shadow:var(--shadow-md)}
+        .deck-card-back{background:linear-gradient(135deg,var(--primary),#6D28D9);color:#fff;transform:rotateY(180deg);box-shadow:var(--shadow-lg)}
+        .deck-card-front .card-label,.deck-card-back .card-label{position:absolute;top:14px;left:20px;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;font-weight:600;opacity:.5}
+        .deck-progress{max-width:520px;margin:0 auto}
+
+        @media(max-width:768px){
+            .hero-section{padding:60px 0 50px}
+            .hero-section::after{height:30px}
+            .card-body{padding:1rem}
+            .container{padding-left:1rem;padding-right:1rem}
+        }
+        @media(max-width:576px){
+            .stat-card{padding:.85rem;border-radius:10px}
+            .stat-card .icon{width:34px;height:34px;font-size:.95rem}
+            .stat-card h5{font-size:1rem}
+            .stat-card small{font-size:.65rem}
+            .note-item{gap:8px!important;padding:10px!important}
+            .note-item .flex-shrink-0:first-child{display:none}
+            .note-item h6{font-size:.8rem!important}
+            .note-item .dropdown .btn{font-size:.75rem!important}
+            .note-item small.text-muted{font-size:.65rem!important}
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Chhohreivung</a>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#navOffcanvas">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-none d-lg-flex" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'community' %}">Community</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'pricing' %}">Pricing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'note_upload' %}">Upload</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'test_history' %}">Tests</a></li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'note_list' %}">Browse</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'pricing' %}">Pricing</a></li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item">
+                        <button class="nav-link border-0 bg-transparent" id="darkModeToggle" title="Toggle dark mode" style="cursor:pointer;font-size:1.05rem;padding:.4rem .6rem">
+                            <i class="bi bi-moon-stars"></i>
+                        </button>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item position-relative">
+                        <button class="nav-link border-0 bg-transparent position-relative" id="notificationBell" title="Notifications" style="cursor:pointer;font-size:1.05rem;padding:.4rem .6rem" onclick="toggleNotifications(event)">
+                            <i class="bi bi-bell"></i>
+                            <span id="notifBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:.5rem;padding:.15rem .35rem;display:none">0</span>
+                        </button>
+                        <div id="notifDropdown" class="dropdown-menu dropdown-menu-end shadow-lg border-0" style="width:320px;display:none;border-radius:12px;max-height:400px;overflow-y:auto">
+                            <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="border-color:var(--border)!important">
+                                <h6 class="fw-bold mb-0 small">Notifications</h6>
+                                <button class="btn btn-sm text-primary border-0 p-0" style="font-size:.7rem" onclick="markAllRead()">Mark all read</button>
+                            </div>
+                            <div id="notifList"></div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#" role="button" data-bs-toggle="dropdown">
+                            <div class="avatar-sm" style="background:linear-gradient(135deg,var(--primary),#A78BFA)">{% if user.profile.avatar %}<img src="{{ user.profile.avatar.url }}" alt="">{% elif user.profile.avatar_url %}<img src="{{ user.profile.avatar_url }}" alt="">{% else %}<span style="font-size:.75rem">{{ user.username|first|upper }}</span>{% endif %}</div>
+                            <span class="d-none d-md-inline">{{ user.email }}</span>
+                            <span class="badge rounded-pill {% if user.profile.plan == 'pro' %}bg-warning text-dark{% elif user.profile.plan == 'premium' %}bg-info{% else %}bg-secondary{% endif %}" style="font-size:.6rem;padding:.15rem .45rem">{{ user.profile.plan|title }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'community' %}"><i class="bi bi-people"></i> Community</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-person"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{% url 'support' %}"><i class="bi bi-question-circle"></i> Support</a></li>
+                            {% if user.is_staff %}<li><a class="dropdown-item" href="{% url 'admin_dashboard' %}"><i class="bi bi-shield-check"></i> Admin</a></li>{% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="return showLogoutModal(event)"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
+                    <li class="nav-item ms-1"><a class="btn btn-primary btn-sm" href="{% url 'account_signup' %}">Sign Up</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="offcanvas offcanvas-end d-lg-none" tabindex="-1" id="navOffcanvas" style="background:var(--bg-card);width:300px">
+        <div class="offcanvas-header border-bottom" style="border-color:var(--border)!important;padding:1rem 1.25rem">
+            <a class="navbar-brand mb-0" href="{% url 'home' %}">Chhohreivung</a>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" style="font-size:.85rem"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <div class="d-flex flex-column h-100">
+                <div class="flex-grow-1">
+                    {% if user.is_authenticated %}
+                    <div class="px-4 py-3 d-flex align-items-center gap-3" style="background:linear-gradient(135deg,var(--primary-light),transparent)">
+                        <div class="avatar-sm" style="width:42px;height:42px;font-size:1rem;background:linear-gradient(135deg,var(--primary),#A78BFA);box-shadow:0 2px 8px var(--primary-glow)">{% if user.profile.avatar %}<img src="{{ user.profile.avatar.url }}" alt="">{% elif user.profile.avatar_url %}<img src="{{ user.profile.avatar_url }}" alt="">{% else %}{{ user.username|first|upper }}{% endif %}</div>
+                        <div class="flex-grow-1" style="min-width:0"><div class="fw-semibold small text-truncate">{{ user.username }}</div><span class="badge rounded-pill {% if user.profile.plan == 'pro' %}bg-warning text-dark{% elif user.profile.plan == 'premium' %}bg-info{% else %}bg-secondary{% endif %}" style="font-size:.6rem">{{ user.profile.plan|title }}</span></div>
+                    </div>
+                    {% endif %}
+                    <div class="py-2">
+                        <div class="px-4 py-2"><small class="text-muted fw-semibold" style="font-size:.6rem;letter-spacing:.08em;text-transform:uppercase">Main</small></div>
+                        <a href="{% url 'community' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2" style="width:32px;height:32px;background:var(--primary-light)"><i class="bi bi-people fs-6 text-primary"></i></div><span class="small fw-medium" style="color:var(--text)">Community</span></a>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'note_upload' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2" style="width:32px;height:32px;background:var(--primary-light)"><i class="bi bi-upload fs-6 text-primary"></i></div><span class="small fw-medium" style="color:var(--text)">Upload</span></a>
+                        <a href="{% url 'dashboard' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2" style="width:32px;height:32px;background:var(--primary-light)"><i class="bi bi-speedometer2 fs-6 text-primary"></i></div><span class="small fw-medium" style="color:var(--text)">Dashboard</span></a>
+                        <a href="{% url 'profile' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2" style="width:32px;height:32px;background:var(--primary-light)"><i class="bi bi-person fs-6 text-primary"></i></div><span class="small fw-medium" style="color:var(--text)">Profile</span></a>
+                        <a href="{% url 'test_history' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2" style="width:32px;height:32px;background:var(--primary-light)"><i class="bi bi-journal-check fs-6 text-primary"></i></div><span class="small fw-medium" style="color:var(--text)">Tests</span></a>
+                        <a href="{% url 'pricing' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2" style="width:32px;height:32px;background:var(--primary-light)"><i class="bi bi-currency-rupee fs-6 text-primary"></i></div><span class="small fw-medium" style="color:var(--text)">Pricing</span></a>
+                        <a href="{% url 'notifications' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2 position-relative" style="width:32px;height:32px;background:var(--primary-light)"><i class="bi bi-bell fs-6 text-primary"></i><span id="notifBadgeMobile" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:.45rem;padding:.15rem .3rem;display:none">0</span></div><span class="small fw-medium" style="color:var(--text)">Notifications</span></a>
+                        {% endif %}
+                        <div class="px-4 py-2 mt-2"><small class="text-muted fw-semibold" style="font-size:.6rem;letter-spacing:.08em;text-transform:uppercase">Company</small></div>
+                        <a href="{% url 'about' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2" style="width:32px;height:32px;background:var(--bg)"><i class="bi bi-info-circle fs-6" style="color:var(--text-muted)"></i></div><span class="small" style="color:var(--text-muted)">About</span></a>
+                        <a href="{% url 'support' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2" style="width:32px;height:32px;background:var(--bg)"><i class="bi bi-question-circle fs-6" style="color:var(--text-muted)"></i></div><span class="small" style="color:var(--text-muted)">Support</span></a>
+                        <a href="{% url 'contact' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2" style="width:32px;height:32px;background:var(--bg)"><i class="bi bi-envelope fs-6" style="color:var(--text-muted)"></i></div><span class="small" style="color:var(--text-muted)">Contact</span></a>
+                        <a href="{% url 'advertise' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2" style="width:32px;height:32px;background:var(--bg)"><i class="bi bi-megaphone fs-6" style="color:var(--text-muted)"></i></div><span class="small" style="color:var(--text-muted)">Advertise</span></a>
+                        <a href="{% url 'privacy' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2" style="width:32px;height:32px;background:var(--bg)"><i class="bi bi-shield-check fs-6" style="color:var(--text-muted)"></i></div><span class="small" style="color:var(--text-muted)">Privacy</span></a>
+                        <a href="{% url 'terms' %}" class="d-flex align-items-center gap-3 px-4 py-2 text-decoration-none nav-offcanvas-link"><div class="d-flex align-items-center justify-content-center rounded-2" style="width:32px;height:32px;background:var(--bg)"><i class="bi bi-file-text fs-6" style="color:var(--text-muted)"></i></div><span class="small" style="color:var(--text-muted)">Terms</span></a>
+                    </div>
+                </div>
+                <div class="border-top px-4 py-3 d-flex justify-content-between align-items-center" style="border-color:var(--border)!important">
+                    <button class="btn btn-sm border-0 d-flex align-items-center gap-2" id="darkModeToggleMobile" style="font-size:.82rem;color:var(--text-muted);padding:0"><i class="bi bi-moon-stars"></i><span>Dark Mode</span></button>
+                    {% if user.is_authenticated %}
+                    <a href="#" class="small text-muted" style="font-size:.8rem" onclick="event.preventDefault();showLogoutModal()"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="toast-container">
+        {% for message in messages %}
+        <div class="toast align-items-center text-bg-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} border-0 show" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">{{ message }}</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <button id="goTop" class="btn btn-primary rounded-circle shadow" style="position:fixed;bottom:24px;right:24px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;visibility:hidden;transition:all .3s;border:none" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="bi bi-chevron-up fs-5"></i></button>
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <span class="fw-bold fs-5 text-white">Chhohreivung</span>
+                    <p class="small mt-1 mb-0" style="max-width: 300px;">AI-powered study platform. Upload notes, generate study materials, and practice effectively.</p>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h6>Platform</h6>
+                    <div class="mt-2"><a href="{% url 'note_list' %}">Browse Notes</a></div>
+                    <div><a href="{% url 'dashboard' %}">Dashboard</a></div>
+                    <div><a href="{% url 'test_history' %}">Practice Tests</a></div>
+                    <div><a href="{% url 'community' %}">Community</a></div>
+                    <div><a href="{% url 'pricing' %}">Pricing</a></div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h6>Company</h6>
+                    <div class="mt-2"><a href="{% url 'about' %}">About</a></div>
+                    <div><a href="{% url 'support' %}">Support</a></div>
+                    <div><a href="{% url 'contact' %}">Contact</a></div>
+                    <div><a href="{% url 'advertise' %}">Advertise</a></div>
+                    <div><a href="{% url 'privacy' %}">Privacy Policy</a></div>
+                    <div><a href="{% url 'terms' %}">Terms of Service</a></div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h6>Account</h6>
+                    {% if user.is_authenticated %}
+                    <div class="mt-2"><a href="{% url 'profile' %}">Profile</a></div>
+                    <div><a href="#" onclick="event.preventDefault();showLogoutModal()">Logout</a></div>
+                    {% else %}
+                    <div class="mt-2"><a href="{% url 'account_login' %}">Login</a></div>
+                    <div><a href="{% url 'account_signup' %}">Sign Up</a></div>
+                    {% endif %}
+                </div>
+            </div>
+            <hr class="my-3">
+            <p class="text-center small mb-0">&copy; {% now "Y" %} Chhohreivung. All rights reserved.</p>
+        </div>
+    </footer>
+
+<div class="modal fade" id="logoutModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow-lg" style="border-radius:16px">
+            <div class="modal-body p-4 text-center">
+                <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:60px;height:60px;background:#EF444420">
+                    <i class="bi bi-box-arrow-right fs-3" style="color:#EF4444"></i>
+                </div>
+                <h5 class="fw-bold mb-1">Leave already?</h5>
+                <p class="small text-muted mb-3">Are you sure you want to log out?</p>
+                <div class="d-grid gap-2">
+                    <form method="post" action="{% url 'account_logout' %}">{% csrf_token %}<button type="submit" class="btn btn-outline-danger w-100 rounded-pill"><i class="bi bi-check-lg me-1"></i>Yes, Logout</button></form>
+                    <button class="btn btn-light rounded-pill" data-bs-dismiss="modal" style="color:var(--text-muted)">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.toast').forEach(function(t) { setTimeout(function() { t.remove(); }, 5000); });
+        });
+        document.body.addEventListener('click', function(e) {
+            var fc = e.target.closest('.flashcard');
+            if (fc) fc.classList.toggle('flipped');
+        });
+        document.body.addEventListener('click', function(e) {
+            var like = e.target.closest('.like-btn');
+            if (like) {
+                e.preventDefault();
+                var noteId = like.dataset.noteId;
+                fetch('/notes/' + noteId + '/like/', { method:'POST', headers:{'X-CSRFToken': getCsrf()} })
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    like.classList.toggle('text-danger', d.liked);
+                    like.querySelector('i').className = d.liked ? 'bi bi-heart-fill' : 'bi bi-heart';
+                    var ct = like.querySelector('.like-count');
+                    if (ct) ct.textContent = d.count;
+                }).catch(function(){});
+            }
+        });
+        document.body.addEventListener('click', function(e) {
+            var bm = e.target.closest('.bookmark-btn');
+            if (bm) {
+                e.preventDefault();
+                var noteId = bm.dataset.noteId;
+                fetch('/notes/' + noteId + '/bookmark/', { method:'POST', headers:{'X-CSRFToken': getCsrf()} })
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    bm.classList.toggle('text-warning', d.bookmarked);
+                    bm.querySelector('i').className = d.bookmarked ? 'bi bi-bookmark-fill' : 'bi bi-bookmark';
+                }).catch(function(){});
+            }
+        });
+        function getCsrf() {
+            var c = document.cookie.split(';');
+            for (var i = 0; i < c.length; i++) {
+                var t = c[i].trim();
+                if (t.startsWith('csrftoken=')) return t.substring(10);
+            }
+            return '';
+        }
+        (function() {
+            var html = document.documentElement;
+            function setTheme(dark) {
+                if (dark) { html.setAttribute('data-theme', 'dark'); } else { html.removeAttribute('data-theme'); }
+        document.querySelectorAll('#darkModeToggle, #darkModeToggleMobile').forEach(function(el) {
+            var icon = el.querySelector('i');
+            if (icon) icon.className = dark ? 'bi bi-sun' : 'bi bi-moon-stars';
+            var label = el.querySelector('span');
+            if (label) label.textContent = dark ? 'Light Mode' : 'Dark Mode';
+        });
+                try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch(e) {}
+            }
+            var stored = null;
+            try { stored = localStorage.getItem('theme'); } catch(e) {}
+            if (stored) { setTheme(stored === 'dark'); }
+            else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { setTheme(true); }
+            document.addEventListener('click', function(e) {
+                var btn = e.target.closest('#darkModeToggle, #darkModeToggleMobile');
+                if (btn) setTheme(html.getAttribute('data-theme') !== 'dark');
+            });
+        })();
+        function loadNotifications() {
+            fetch('/notifications/api/').then(function(r){return r.json()}).then(function(d){
+                var badge = document.getElementById('notifBadge');
+                if (badge) {
+                    if (d.unread_count > 0) { badge.style.display = ''; badge.textContent = d.unread_count; }
+                    else { badge.style.display = 'none'; }
+                }
+                var badgeMobile = document.getElementById('notifBadgeMobile');
+                if (badgeMobile) {
+                    if (d.unread_count > 0) { badgeMobile.style.display = ''; badgeMobile.textContent = d.unread_count; }
+                    else { badgeMobile.style.display = 'none'; }
+                }
+                var list = document.getElementById('notifList');
+                if (!list) return;
+                list.innerHTML = '';
+                if (d.notifications.length === 0) {
+                    list.innerHTML = '<div class="text-center py-4"><i class="bi bi-bell-slash text-muted d-block mb-2" style="font-size:1.5rem"></i><small class="text-muted">No notifications</small></div>';
+                    return;
+                }
+                d.notifications.forEach(function(n) {
+                    var icons = {like:'bi-heart-fill text-danger',comment:'bi-chat-fill text-primary',admin:'bi-megaphone-fill text-warning'};
+                    var icon = icons[n.type] || 'bi-bell text-muted';
+                    var item = document.createElement('a');
+                    item.className = 'dropdown-item px-3 py-2 d-flex align-items-start gap-2' + (n.is_read ? '' : '');
+                    item.href = n.link || '#';
+                    item.style = 'font-size:.8rem;white-space:normal;border-bottom:1px solid var(--border)';
+                    item.innerHTML = '<div class="mt-1 flex-shrink-0"><i class="bi ' + icon + '"></i></div><div style="min-width:0"><div class="fw-medium" style="color:var(--text)">' + n.title + '</div><small class="text-muted">' + n.message + '</small></div>';
+                    if (!n.is_read) {
+                        item.style.background = 'var(--primary-light)';
+                        item.onclick = function(e) {
+                            fetch('/notifications/' + n.id + '/read/', {method:'POST', headers:{'X-CSRFToken':getCsrf()}}).catch(function(){});
+                        };
+                    }
+                    list.appendChild(item);
+                });
+            }).catch(function(){});
+        }
+        function toggleNotifications(e) {
+            e.preventDefault(); e.stopPropagation();
+            var el = document.getElementById('notifDropdown');
+            if (!el) return;
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            if (el.style.display === 'block') loadNotifications();
+        }
+        function markAllRead() {
+            fetch('/notifications/read-all/', {method:'POST', headers:{'X-CSRFToken':getCsrf()}})
+            .then(function(){ var b=document.getElementById('notifBadge'); if(b) b.style.display='none'; loadNotifications(); })
+            .catch(function(){});
+        }
+        document.addEventListener('click', function(e) {
+            var dd = document.getElementById('notifDropdown');
+            if (dd && !e.target.closest('#notificationBell') && !e.target.closest('#notifDropdown')) dd.style.display = 'none';
+        });
+        if (document.getElementById('notificationBell')) { loadNotifications(); setInterval(loadNotifications, 30000); }
+        (function() {
+            var btn = document.getElementById('goTop');
+            if (!btn) return;
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) { btn.style.opacity = '1'; btn.style.visibility = 'visible'; }
+                else { btn.style.opacity = '0'; btn.style.visibility = 'hidden'; }
+            }, { passive: true });
+        })();
+        function showLimitModal(d) {
+            var existing = document.getElementById('limitModal');
+            if (existing) existing.remove();
+            var modal = document.createElement('div');
+            modal.id = 'limitModal'; modal.className = 'modal fade';
+            modal.setAttribute('tabindex','-1');
+            modal.innerHTML = '<div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow-lg" style="border-radius:16px"><div class="modal-body p-4 text-center"><div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;background:#F59E0B20"><i class="bi bi-lightning-charge fs-2" style="color:#F59E0B"></i></div><h5 class="fw-bold mb-1">Limit Reached</h5><p class="small text-muted mb-3">' + (d.message || 'You\'ve used your free limit for today.') + '</p><a href="' + (d.upgrade_url || '/pricing/') + '" class="btn btn-primary w-100 rounded-pill"><i class="bi bi-star me-1"></i>Upgrade to Premium — ₹199/mo</a><button class="btn btn-sm btn-link text-muted mt-2" data-bs-dismiss="modal" style="text-decoration:none;font-size:.8rem">Maybe later</button></div></div></div>';
+            document.body.appendChild(modal);
+            var bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+            modal.addEventListener('hidden.bs.modal', function() { modal.remove(); });
+        }
+        function showLogoutModal() { var m = new bootstrap.Modal(document.getElementById('logoutModal')); m.show(); }
+        function showToast(message, type) {
+            var c = document.querySelector('.toast-container') || (function() { var el = document.createElement('div'); el.className = 'toast-container'; document.body.appendChild(el); return el; })();
+            var t = document.createElement('div');
+            t.className = 'toast align-items-center text-bg-' + type + ' border-0 show';
+            t.innerHTML = '<div class="d-flex"><div class="toast-body">' + message + '</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>';
+            c.appendChild(t);
+            setTimeout(function() { t.remove(); }, 5000);
+        }
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

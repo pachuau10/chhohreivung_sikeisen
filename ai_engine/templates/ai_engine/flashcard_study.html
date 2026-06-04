@@ -1,0 +1,158 @@
+{% extends 'core/base.html' %}
+{% block title %}Study Flashcards - {{ note.title }} - Chhohreivung{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'note_list' %}">Notes</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'note_detail' note.pk %}">{{ note.title|truncatechars:30 }}</a></li>
+            <li class="breadcrumb-item active">Study Flashcards</li>
+        </ol>
+    </nav>
+    <div class="text-center mb-3">
+        <h5 class="fw-bold mb-1"><i class="bi bi-card-text me-2 text-primary"></i>{{ note.title }} — Flashcards</h5>
+        <span class="text-muted small">Click card to flip &middot; Use arrow keys to navigate</span>
+    </div>
+    <div class="deck-progress mb-3">
+        <div class="d-flex justify-content-between small text-muted mb-1">
+            <span id="progress-label">0 / 0</span>
+            <span id="learned-count">0 learned</span>
+        </div>
+        <div class="progress" style="height:6px">
+            <div id="progress-bar" class="progress-bar bg-primary" role="progressbar" style="width:0%"></div>
+        </div>
+    </div>
+    <div class="position-relative mb-3">
+        <div id="deck" class="deck-card" onclick="flipCard()">
+            <div class="deck-card-inner">
+                <div class="deck-card-front">
+                    <span class="card-label">Front</span>
+                    <p id="front-text" class="mb-0 fw-medium">Loading...</p>
+                </div>
+                <div class="deck-card-back">
+                    <span class="card-label">Back</span>
+                    <p id="back-text" class="mb-0">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <div class="d-flex justify-content-center gap-3 mb-3">
+            <button class="btn btn-outline-secondary" onclick="prevCard()" title="Previous (Left Arrow)"><i class="bi bi-chevron-left"></i></button>
+            <button class="btn btn-outline-secondary" onclick="shuffleCards()" title="Shuffle"><i class="bi bi-shuffle"></i></button>
+            <button class="btn btn-outline-secondary" onclick="resetProgress()" title="Reset progress"><i class="bi bi-arrow-counterclockwise"></i></button>
+            <button class="btn btn-outline-secondary" onclick="nextCard()" title="Next (Right Arrow)"><i class="bi bi-chevron-right"></i></button>
+        </div>
+        <div class="d-flex justify-content-center gap-3">
+            <button class="btn btn-outline-danger px-4" onclick="markNotLearned()"><i class="bi bi-x-circle me-1"></i>Still Learning</button>
+            <button class="btn btn-success px-4" onclick="markLearned()"><i class="bi bi-check-circle me-1"></i>Know It</button>
+        </div>
+        <div class="mt-3">
+            <a href="{% url 'note_detail' note.pk %}" class="btn btn-link btn-sm text-muted"><i class="bi bi-arrow-left me-1"></i>Back to Note</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+var cards = [
+    {% for card in flashcards %}
+    {id: {{ card.id }}, front: "{{ card.front|escapejs }}", back: "{{ card.back|escapejs }}", learned: {{ card.is_learned|lower }} },
+    {% endfor %}
+];
+var current = 0;
+var flipped = false;
+var markUrl = '{% url "flashcard_mark" 9999 %}';
+
+function showCard() {
+    if (!cards.length) {
+        document.getElementById('front-text').textContent = 'No flashcards yet.';
+        document.getElementById('back-text').textContent = 'Generate some from the note page!';
+        return;
+    }
+    var c = cards[current];
+    document.getElementById('front-text').textContent = c.front;
+    document.getElementById('back-text').textContent = c.back;
+    document.getElementById('progress-label').textContent = (current + 1) + ' / ' + cards.length;
+    document.getElementById('progress-bar').style.width = ((current + 1) / cards.length * 100) + '%';
+    var learned = cards.filter(function(x) { return x.learned; }).length;
+    document.getElementById('learned-count').textContent = learned + ' learned';
+    document.getElementById('deck').classList.toggle('flipped', flipped);
+}
+
+function flipCard() {
+    if (!cards.length) return;
+    flipped = !flipped;
+    document.getElementById('deck').classList.toggle('flipped');
+}
+
+function nextCard() {
+    if (!cards.length) return;
+    flipped = false;
+    document.getElementById('deck').classList.remove('flipped');
+    current = (current + 1) % cards.length;
+    showCard();
+}
+
+function prevCard() {
+    if (!cards.length) return;
+    flipped = false;
+    document.getElementById('deck').classList.remove('flipped');
+    current = (current - 1 + cards.length) % cards.length;
+    showCard();
+}
+
+function shuffleCards() {
+    for (var i = cards.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = cards[i]; cards[i] = cards[j]; cards[j] = tmp;
+    }
+    current = 0;
+    flipped = false;
+    showCard();
+}
+
+function markLearned() {
+    if (!cards.length) return;
+    cards[current].learned = true;
+    fetch(markUrl.replace('9999', cards[current].id), {
+        method: 'POST', headers: {'X-CSRFToken': '{{ csrf_token }}'},
+        body: new URLSearchParams({learned: 'true'})
+    }).catch(function(){});
+    showCard();
+    setTimeout(nextCard, 300);
+}
+
+function markNotLearned() {
+    if (!cards.length) return;
+    cards[current].learned = false;
+    fetch(markUrl.replace('9999', cards[current].id), {
+        method: 'POST', headers: {'X-CSRFToken': '{{ csrf_token }}'},
+        body: new URLSearchParams({learned: 'false'})
+    }).catch(function(){});
+    showCard();
+    setTimeout(nextCard, 300);
+}
+
+function resetProgress() {
+    cards.forEach(function(c) { c.learned = false; });
+    current = 0;
+    flipped = false;
+    showCard();
+    cards.forEach(function(c) {
+        fetch(markUrl.replace('9999', c.id), {
+            method: 'POST', headers: {'X-CSRFToken': '{{ csrf_token }}'},
+            body: new URLSearchParams({learned: 'false'})
+        }).catch(function(){});
+    });
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextCard(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevCard(); }
+    else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flipCard(); }
+});
+
+showCard();
+</script>
+{% endblock %}
