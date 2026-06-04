@@ -24,11 +24,6 @@ from tests.models import PracticeAttempt
 class IndexView(TemplateView):
     template_name = 'core/index.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect('dashboard')
-        return super().dispatch(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['public_notes_count'] = Note.objects.filter(visibility='public').count()

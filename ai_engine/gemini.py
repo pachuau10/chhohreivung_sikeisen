@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 import requests
 from django.conf import settings
 
@@ -40,18 +41,30 @@ class GeminiClient:
     def _groq_generate(self, prompt, temperature, max_tokens):
         if not self.api_key:
             return self._mock_response(prompt)
-        try:
-            resp = requests.post(
-                'https://api.groq.com/openai/v1/chat/completions',
-                headers={'Authorization': f'Bearer {self.api_key}', 'Content-Type': 'application/json'},
-                json={'model': self.model, 'messages': [{'role': 'user', 'content': prompt}], 'temperature': temperature, 'max_tokens': max_tokens},
-                timeout=60,
-            )
-            resp.raise_for_status()
-            return resp.json()['choices'][0]['message']['content']
-        except Exception as e:
-            logger.error(f'Groq API error: {e}')
-            return json.dumps({'error': f'Groq API error: {e}'})
+        last_error = None
+        for attempt in range(3):
+            try:
+                resp = requests.post(
+                    'https://api.groq.com/openai/v1/chat/completions',
+                    headers={'Authorization': f'Bearer {self.api_key}', 'Content-Type': 'application/json'},
+                    json={'model': self.model, 'messages': [{'role': 'user', 'content': prompt}], 'temperature': temperature, 'max_tokens': max_tokens},
+                    timeout=60,
+                )
+                resp.raise_for_status()
+                return resp.json()['choices'][0]['message']['content']
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == 429 and attempt < 2:
+                    wait = 2 ** attempt
+                    logger.warning(f'Groq rate limited, retrying in {wait}s')
+                    time.sleep(wait)
+                    last_error = e
+                else:
+                    logger.error(f'Groq API error: {e}')
+                    return json.dumps({'error': f'Groq API error: {e}'})
+            except Exception as e:
+                logger.error(f'Groq API error: {e}')
+                return json.dumps({'error': f'Groq API error: {e}'})
+        return json.dumps({'error': f'Groq API error: {last_error}'})
 
     def _gemini_generate(self, prompt, temperature, max_tokens):
         if not self.model:

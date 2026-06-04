@@ -4,213 +4,371 @@
 {% block og_description %}AI-powered study platform. Upload notes, generate MCQs, flashcards, summaries, and practice tests.{% endblock %}
 {% block content %}
 
-<div class="hero-section text-center position-relative overflow-hidden" style="padding:120px 0 100px;background:linear-gradient(135deg,#1E1B4B 0%,#312E81 40%,var(--primary) 100%);">
-    <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
-        <div style="position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 50%,rgba(167,139,250,0.15) 0%,transparent 50%),radial-gradient(circle at 70% 50%,rgba(124,58,237,0.1) 0%,transparent 50%)"></div>
-        <div style="position:absolute;top:20%;left:10%;width:300px;height:300px;border-radius:50%;background:rgba(167,139,250,0.08);filter:blur(60px)"></div>
-        <div style="position:absolute;bottom:10%;right:15%;width:250px;height:250px;border-radius:50%;background:rgba(124,58,237,0.08);filter:blur(50px)"></div>
-    </div>
-    <div class="container position-relative" style="z-index:1">
-        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-4" style="background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);font-size:.8rem;color:rgba(255,255,255,0.8)">
-            <span class="badge rounded-pill bg-white text-dark" style="font-size:.65rem;padding:.2rem .5rem">NEW</span>
-            AI-powered study tools
-        </div>
-        <h1 class="display-4 fw-bold mb-3 lh-1" style="letter-spacing:-.03em">Study Smarter<br>with <span style="background:linear-gradient(135deg,#A78BFA,#C4B5FD);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Artificial Intelligence</span></h1>
-        <p class="lead mb-4 mx-auto opacity-75" style="max-width:580px;font-size:1.1rem">Upload your notes and instantly generate MCQs, flashcards, summaries, and practice tests. Turn hours of study into minutes.</p>
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-            {% if user.is_authenticated %}
-            <a href="{% url 'dashboard' %}" class="btn btn-light btn-lg px-5 fw-semibold" style="color:var(--primary);border-radius:12px;padding:.7rem 2rem">Go to Dashboard <i class="bi bi-arrow-right ms-1"></i></a>
-            {% else %}
-            <a href="{% url 'account_signup' %}" class="btn btn-light btn-lg px-5 fw-semibold" style="color:var(--primary);border-radius:12px;padding:.7rem 2rem">Get Started Free <i class="bi bi-arrow-right ms-1"></i></a>
-            <a href="{% url 'note_list' %}" class="btn btn-lg px-4 fw-semibold" style="border-radius:12px;padding:.7rem 1.5rem;border:1.5px solid rgba(255,255,255,0.3);color:#fff;background:transparent">Browse Notes</a>
-            {% endif %}
-        </div>
-        <div class="d-flex justify-content-center gap-4 mt-5 pt-3" style="border-top:1px solid rgba(255,255,255,0.1)">
-            <div><div class="fw-bold fs-4" style="color:#A78BFA">{{ public_notes_count|default:"0" }}+</div><div class="small opacity-75">Notes Shared</div></div>
-            <div><div class="fw-bold fs-4" style="color:#A78BFA">5</div><div class="small opacity-75">Free Generations/Day</div></div>
-            <div><div class="fw-bold fs-4" style="color:#A78BFA">AI</div><div class="small opacity-75">Powered</div></div>
-        </div>
-    </div>
-</div>
-
-<section class="py-5">
+<section style="padding:100px 0 80px;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-card) 100%);overflow:hidden">
     <div class="container">
-        <div class="row g-4 align-items-center">
-            <div class="col-lg-5">
-                <span class="badge rounded-pill mb-2" style="background:var(--primary-light);color:var(--primary);font-size:.7rem;padding:.3rem .8rem">How It Works</span>
-                <h2 class="fw-bold mb-2" style="font-size:1.75rem">Three steps to master any subject</h2>
-                <p class="text-muted mb-0">From upload to practice in minutes. No setup, no hassle.</p>
-            </div>
-            <div class="col-lg-7">
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <div class="text-center p-3" style="border-radius:12px;background:var(--bg-card);border:1px solid var(--border);height:100%">
-                            <div class="d-flex align-items-center justify-content-center mx-auto mb-2" style="width:48px;height:48px;border-radius:12px;background:var(--primary-light);color:var(--primary);font-size:1.2rem">1</div>
-                            <h6 class="fw-semibold mb-1">Upload</h6>
-                            <p class="text-muted mb-0" style="font-size:.8rem">Drop your PDF or DOCX notes</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="text-center p-3" style="border-radius:12px;background:var(--bg-card);border:1px solid var(--border);height:100%">
-                            <div class="d-flex align-items-center justify-content-center mx-auto mb-2" style="width:48px;height:48px;border-radius:12px;background:var(--primary-light);color:var(--primary);font-size:1.2rem">2</div>
-                            <h6 class="fw-semibold mb-1">Generate</h6>
-                            <p class="text-muted mb-0" style="font-size:.8rem">AI creates questions & flashcards</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="text-center p-3" style="border-radius:12px;background:var(--bg-card);border:1px solid var(--border);height:100%">
-                            <div class="d-flex align-items-center justify-content-center mx-auto mb-2" style="width:48px;height:48px;border-radius:12px;background:var(--primary-light);color:var(--primary);font-size:1.2rem">3</div>
-                            <h6 class="fw-semibold mb-1">Practice</h6>
-                            <p class="text-muted mb-0" style="font-size:.8rem">Test yourself and track progress</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="py-5" style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
-    <div class="container">
-        <div class="text-center mb-5">
-            <span class="badge rounded-pill mb-2" style="background:var(--primary-light);color:var(--primary);font-size:.7rem;padding:.3rem .8rem">Features</span>
-            <h2 class="fw-bold mb-1" style="font-size:1.75rem">Everything you need to ace your exams</h2>
-            <p class="text-muted">Powerful tools built around your study materials</p>
-        </div>
-        <div class="row g-3">
-            <div class="col-md-4 col-6">
-                <div class="p-3 h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
-                    <div class="mb-2" style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary)"><i class="bi bi-file-text"></i></div>
-                    <h6 class="fw-semibold mb-1" style="font-size:.9rem">Smart Notes</h6>
-                    <p class="text-muted mb-0" style="font-size:.8rem">Upload, organize, and search your study materials.</p>
-                </div>
-            </div>
-            <div class="col-md-4 col-6">
-                <div class="p-3 h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
-                    <div class="mb-2" style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary)"><i class="bi bi-question-circle"></i></div>
-                    <h6 class="fw-semibold mb-1" style="font-size:.9rem">AI Questions</h6>
-                    <p class="text-muted mb-0" style="font-size:.8rem">MCQs, short & long questions from any note.</p>
-                </div>
-            </div>
-            <div class="col-md-4 col-6">
-                <div class="p-3 h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
-                    <div class="mb-2" style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary)"><i class="bi bi-card-text"></i></div>
-                    <h6 class="fw-semibold mb-1" style="font-size:.9rem">Flashcards</h6>
-                    <p class="text-muted mb-0" style="font-size:.8rem">Digital flashcards for active recall.</p>
-                </div>
-            </div>
-            <div class="col-md-4 col-6">
-                <div class="p-3 h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
-                    <div class="mb-2" style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary)"><i class="bi bi-journal-text"></i></div>
-                    <h6 class="fw-semibold mb-1" style="font-size:.9rem">Summaries</h6>
-                    <p class="text-muted mb-0" style="font-size:.8rem">AI-generated summaries of your notes.</p>
-                </div>
-            </div>
-            <div class="col-md-4 col-6">
-                <div class="p-3 h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
-                    <div class="mb-2" style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary)"><i class="bi bi-clock"></i></div>
-                    <h6 class="fw-semibold mb-1" style="font-size:.9rem">Practice Tests</h6>
-                    <p class="text-muted mb-0" style="font-size:.8rem">Timed tests with instant scoring.</p>
-                </div>
-            </div>
-            <div class="col-md-4 col-6">
-                <div class="p-3 h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
-                    <div class="mb-2" style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary)"><i class="bi bi-share"></i></div>
-                    <h6 class="fw-semibold mb-1" style="font-size:.9rem">Share & Discover</h6>
-                    <p class="text-muted mb-0" style="font-size:.8rem">Share notes and discover materials.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="py-5">
-    <div class="container">
-        <div class="row g-4 align-items-center">
+        <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <div class="position-relative" style="border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(124,58,237,0.15)">
-                    <div style="background:linear-gradient(135deg,#1E1B4B,#312E81);padding:2rem;min-height:300px;display:flex;align-items:center;justify-content:center">
-                        <div style="text-align:center;color:#fff">
-                            <i class="bi bi-magic" style="font-size:3rem;opacity:.5;display:block;margin-bottom:1rem"></i>
-                            <div style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;background:linear-gradient(135deg,#A78BFA,#C4B5FD);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">AI Generation</div>
-                            <div style="opacity:.6;font-size:.9rem">Upload once, generate everything</div>
-                        </div>
-                    </div>
+                <div style="display:inline-flex;align-items:center;gap:8px;background:var(--primary-light);border:1px solid rgba(124,58,237,0.12);border-radius:100px;padding:6px 14px 6px 6px;margin-bottom:24px">
+                    <span style="background:var(--primary);color:#fff;border-radius:100px;padding:2px 10px;font-size:.65rem;font-weight:600">NEW</span>
+                    <span style="color:var(--text-muted);font-size:.8rem">AI-powered study tools</span>
+                </div>
+                <h1 style="font-size:clamp(2rem,4.5vw,3rem);font-weight:800;line-height:1.15;color:var(--text);margin-bottom:16px;letter-spacing:-.03em">Turn your notes into <span style="background:linear-gradient(135deg,var(--primary),#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">study materials</span> with AI</h1>
+                <p style="font-size:1.05rem;color:var(--text-muted);max-width:480px;margin-bottom:28px;line-height:1.65">Upload any PDF or DOCX and get MCQs, flashcards, summaries, and practice tests — all generated from your own notes.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg px-4" style="border-radius:10px;padding:12px 28px;font-size:.95rem;font-weight:600">Go to Dashboard <i class="bi bi-arrow-right ms-1"></i></a>
+                    {% else %}
+                    <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg px-4" style="border-radius:10px;padding:12px 28px;font-size:.95rem;font-weight:600">Get Started Free <i class="bi bi-arrow-right ms-1"></i></a>
+                    <a href="{% url 'note_list' %}" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;font-size:.95rem;font-weight:500;color:var(--text-muted);text-decoration:none;border:1.5px solid var(--border)">Browse Notes</a>
+                    {% endif %}
+                </div>
+                <div style="display:flex;align-items:center;gap:20px;margin-top:32px;padding-top:24px;border-top:1px solid var(--border)">
+                    <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--text-muted)"><i class="bi bi-check-circle-fill" style="color:#10B981;font-size:.75rem"></i> No credit card</div>
+                    <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--text-muted)"><i class="bi bi-check-circle-fill" style="color:#10B981;font-size:.75rem"></i> 5 free daily</div>
+                    <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--text-muted)"><i class="bi bi-check-circle-fill" style="color:#10B981;font-size:.75rem"></i> PDF & DOCX</div>
                 </div>
             </div>
             <div class="col-lg-6">
-                <span class="badge rounded-pill mb-2" style="background:var(--primary-light);color:var(--primary);font-size:.7rem;padding:.3rem .8rem">Why Chhohreivung</span>
-                <h2 class="fw-bold mb-2" style="font-size:1.75rem">From one note, get everything</h2>
-                <p class="text-muted mb-3">Upload your study material once and let AI generate multiple question formats, flashcards, and summaries — all from a single source.</p>
-                <div class="d-flex flex-column gap-2">
-                    <div class="d-flex align-items-center gap-2" style="font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981"></i> Multiple choice questions with explanations</div>
-                    <div class="d-flex align-items-center gap-2" style="font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981"></i> Short and long answer questions</div>
-                    <div class="d-flex align-items-center gap-2" style="font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981"></i> Digital flashcards for active recall</div>
-                    <div class="d-flex align-items-center gap-2" style="font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981"></i> Concise AI summaries</div>
-                    <div class="d-flex align-items-center gap-2" style="font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981"></i> Timed practice tests with scoring</div>
+                <div style="position:relative;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.08);border:1px solid var(--border);background:var(--bg-card)">
+                    <div style="display:flex;align-items:center;gap:6px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--bg)">
+                        <div style="width:10px;height:10px;border-radius:50%;background:#EF4444"></div>
+                        <div style="width:10px;height:10px;border-radius:50%;background:#F59E0B"></div>
+                        <div style="width:10px;height:10px;border-radius:50%;background:#10B981"></div>
+                        <span style="margin-left:12px;font-size:.75rem;color:var(--text-muted)">Chhohreivung — Note Preview</span>
+                    </div>
+                    <div style="padding:20px 24px 24px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+                            <div style="width:36px;height:36px;border-radius:8px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;color:var(--primary)"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+                            <div><div style="font-weight:600;font-size:.85rem">Cell Biology Notes.pdf</div><div style="font-size:.75rem;color:var(--text-muted)">Uploaded just now</div></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+                            <div style="padding:12px;border-radius:8px;background:var(--primary-light);text-align:center">
+                                <div style="font-size:.7rem;color:var(--text-muted);margin-bottom:2px">MCQs</div>
+                                <div style="font-weight:700;font-size:1rem;color:var(--primary)">20</div>
+                            </div>
+                            <div style="padding:12px;border-radius:8px;background:rgba(16,185,129,0.08);text-align:center">
+                                <div style="font-size:.7rem;color:var(--text-muted);margin-bottom:2px">Flashcards</div>
+                                <div style="font-weight:700;font-size:1rem;color:#10B981">10</div>
+                            </div>
+                            <div style="padding:12px;border-radius:8px;background:rgba(245,158,11,0.08);text-align:center">
+                                <div style="font-size:.7rem;color:var(--text-muted);margin-bottom:2px">Questions</div>
+                                <div style="font-weight:700;font-size:1rem;color:#F59E0B">15</div>
+                            </div>
+                            <div style="padding:12px;border-radius:8px;background:rgba(167,139,250,0.08);text-align:center">
+                                <div style="font-size:.7rem;color:var(--text-muted);margin-bottom:2px">Summary</div>
+                                <div style="font-weight:700;font-size:1rem;color:#A78BFA">1</div>
+                            </div>
+                        </div>
+                        <div style="padding:10px 14px;border-radius:8px;background:var(--bg);font-size:.78rem;color:var(--text-muted);line-height:1.5">"The cell membrane is a biological membrane that separates the interior of all cells from the outside environment..."</div>
+                    </div>
                 </div>
-                {% if not user.is_authenticated %}
-                <a href="{% url 'account_signup' %}" class="btn btn-primary mt-3 px-4" style="border-radius:12px">Start Studying Free <i class="bi bi-arrow-right ms-1"></i></a>
-                {% endif %}
             </div>
         </div>
     </div>
 </section>
 
-{% if recent_notes %}
-<section class="py-5" style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+<section style="padding:60px 0;border-top:1px solid var(--border)">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <span class="badge rounded-pill mb-1" style="background:var(--primary-light);color:var(--primary);font-size:.7rem;padding:.3rem .8rem">Community</span>
-                <h2 class="fw-bold mb-0" style="font-size:1.5rem">Recent Notes</h2>
-            </div>
-            <a href="{% url 'note_list' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3" style="font-size:.8rem">View All <i class="bi bi-arrow-right ms-1"></i></a>
+        <p style="text-align:center;font-size:.8rem;color:var(--text-muted);margin-bottom:24px;text-transform:uppercase;letter-spacing:.05em;font-weight:500">Trusted by students</p>
+        <div style="display:flex;justify-content:center;align-items:center;gap:40px;flex-wrap:wrap;opacity:.4">
+            <span style="font-weight:700;font-size:1.1rem;color:var(--text)">Students</span>
+            <span style="font-weight:700;font-size:1.1rem;color:var(--text)">Universities</span>
+            <span style="font-weight:700;font-size:1.1rem;color:var(--text)">Educators</span>
+            <span style="font-weight:700;font-size:1.1rem;color:var(--text)">Researchers</span>
+            <span style="font-weight:700;font-size:1.1rem;color:var(--text)">Professionals</span>
         </div>
-        <div class="row g-3">
-            {% for note in recent_notes %}
+    </div>
+</section>
+
+<section style="padding:80px 0;background:var(--bg-card);border-top:1px solid var(--border)">
+    <div class="container">
+        <div style="text-align:center;max-width:600px;margin:0 auto 48px">
+            <span style="display:inline-block;background:var(--primary-light);color:var(--primary);font-size:.7rem;font-weight:600;padding:4px 12px;border-radius:100px;margin-bottom:12px">Simple Process</span>
+            <h2 style="font-size:1.75rem;font-weight:800;margin-bottom:8px;letter-spacing:-.02em">How it works</h2>
+            <p style="color:var(--text-muted);font-size:.95rem;margin:0">Three simple steps to transform your study materials into interactive learning tools.</p>
+        </div>
+        <div class="row g-4">
             <div class="col-md-4">
-                <div class="h-100" style="border-radius:12px;border:1px solid var(--border);background:var(--bg);overflow:hidden;transition:box-shadow .2s,transform .2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.06)';this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow='';this.style.transform=''">
-                    <div style="padding:1rem">
-                        <div class="d-flex align-items-start gap-2 mb-2">
-                            <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-2" style="width:36px;height:36px;background:var(--primary-light)">
-                                {% with ext=note.file.name|slice:'-3:'|lower %}
-                                {% if ext == 'pdf' %}<i class="bi bi-file-earmark-pdf-fill text-danger" style="font-size:.9rem"></i>
-                                {% elif ext == 'doc' or ext == 'docx' or ext == 'ocx' %}<i class="bi bi-file-earmark-word-fill" style="font-size:.9rem;color:#2B579A"></i>
-                                {% else %}<i class="bi bi-file-earmark-text-fill text-primary" style="font-size:.9rem"></i>
-                                {% endif %}
-                                {% endwith %}
-                            </div>
-                            <div style="min-width:0">
-                                <span class="badge rounded-pill" style="background:var(--primary-light);color:var(--primary);font-size:.6rem;padding:.15rem .5rem">{{ note.subject.name|default:"General" }}</span>
-                                <h6 class="fw-semibold mt-1 mb-0 text-truncate" style="font-size:.85rem">{{ note.title|truncatechars:30 }}</h6>
-                            </div>
-                        </div>
-                        <p class="text-muted mb-0" style="font-size:.78rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ note.preview|default:note.description|truncatechars:120 }}</p>
-                        <div class="d-flex justify-content-between align-items-center mt-2 pt-2" style="border-top:1px solid var(--border)">
-                            <div class="d-flex align-items-center gap-1 text-muted" style="font-size:.75rem"><i class="bi bi-person-circle"></i> {{ note.user.username }}</div>
-                            <div class="d-flex gap-2 text-muted" style="font-size:.75rem"><span><i class="bi bi-download me-1"></i>{{ note.download_count }}</span><span><i class="bi bi-heart me-1"></i>{{ note.like_count|default:"0" }}</span></div>
-                        </div>
-                    </div>
+                <div style="text-align:center;padding:32px 20px;border-radius:16px;background:var(--bg);border:1px solid var(--border);height:100%;transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#A78BFA);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.2rem;font-weight:700">1</div>
+                    <h5 style="font-weight:700;font-size:1rem;margin-bottom:6px">Upload your notes</h5>
+                    <p style="color:var(--text-muted);font-size:.85rem;margin:0;line-height:1.6">Drag and drop your PDF or DOCX files. We support any academic subject from biology to economics.</p>
                 </div>
             </div>
-            {% endfor %}
+            <div class="col-md-4">
+                <div style="text-align:center;padding:32px 20px;border-radius:16px;background:var(--bg);border:1px solid var(--border);height:100%;transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#A78BFA);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.2rem;font-weight:700">2</div>
+                    <h5 style="font-weight:700;font-size:1rem;margin-bottom:6px">AI processes it</h5>
+                    <p style="color:var(--text-muted);font-size:.85rem;margin:0;line-height:1.6">Our AI extracts the content and generates questions, flashcards, and summaries from your material.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="text-align:center;padding:32px 20px;border-radius:16px;background:var(--bg);border:1px solid var(--border);height:100%;transition:border-color .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#A78BFA);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.2rem;font-weight:700">3</div>
+                    <h5 style="font-weight:700;font-size:1rem;margin-bottom:6px">Practice and learn</h5>
+                    <p style="color:var(--text-muted);font-size:.85rem;margin:0;line-height:1.6">Test yourself with quizzes, review flashcards, and track your progress over time.</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
-{% endif %}
 
-<section class="py-5">
+<section style="padding:80px 0">
     <div class="container">
-        <div class="text-center" style="max-width:600px;margin:0 auto">
-            <span class="badge rounded-pill mb-2" style="background:var(--primary-light);color:var(--primary);font-size:.7rem;padding:.3rem .8rem">Get Started</span>
-            <h2 class="fw-bold mb-2" style="font-size:1.5rem">Ready to study smarter?</h2>
-            <p class="text-muted mb-4">Join students who are already using AI to accelerate their learning. Free to start, no credit card needed.</p>
-            {% if user.is_authenticated %}
-            <a href="{% url 'note_upload' %}" class="btn btn-primary btn-lg px-4" style="border-radius:12px;padding:.7rem 2rem">Upload Your First Note <i class="bi bi-arrow-right ms-1"></i></a>
-            {% else %}
-            <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg px-4" style="border-radius:12px;padding:.7rem 2rem">Create Free Account <i class="bi bi-arrow-right ms-1"></i></a>
-            {% endif %}
+        <div style="text-align:center;max-width:600px;margin:0 auto 48px">
+            <span style="display:inline-block;background:var(--primary-light);color:var(--primary);font-size:.7rem;font-weight:600;padding:4px 12px;border-radius:100px;margin-bottom:12px">Features</span>
+            <h2 style="font-size:1.75rem;font-weight:800;margin-bottom:8px;letter-spacing:-.02em">Everything you need to study effectively</h2>
+            <p style="color:var(--text-muted);font-size:.95rem;margin:0">All the tools you need to master any subject in one place.</p>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-4">
+                <div style="padding:24px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);height:100%;transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 4px 20px rgba(124,58,237,0.06)'" onmouseout="this.style.boxShadow=''">
+                    <div style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary);margin-bottom:12px"><i class="bi bi-file-text"></i></div>
+                    <h6 style="font-weight:600;font-size:.9rem;margin-bottom:4px">Smart Notes</h6>
+                    <p style="color:var(--text-muted);font-size:.82rem;margin:0;line-height:1.5">Upload, organize, and search through your study materials. Access them anytime from any device.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div style="padding:24px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);height:100%;transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 4px 20px rgba(124,58,237,0.06)'" onmouseout="this.style.boxShadow=''">
+                    <div style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary);margin-bottom:12px"><i class="bi bi-question-circle"></i></div>
+                    <h6 style="font-weight:600;font-size:.9rem;margin-bottom:4px">MCQ Generation</h6>
+                    <p style="color:var(--text-muted);font-size:.82rem;margin:0;line-height:1.5">Auto-generated multiple choice questions with four options and detailed explanations for every answer.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div style="padding:24px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);height:100%;transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 4px 20px rgba(124,58,237,0.06)'" onmouseout="this.style.boxShadow=''">
+                    <div style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary);margin-bottom:12px"><i class="bi bi-card-text"></i></div>
+                    <h6 style="font-weight:600;font-size:.9rem;margin-bottom:4px">Flashcards</h6>
+                    <p style="color:var(--text-muted);font-size:.82rem;margin:0;line-height:1.5">Digital flashcards with flip animation. Perfect for active recall and spaced repetition studying techniques.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div style="padding:24px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);height:100%;transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 4px 20px rgba(124,58,237,0.06)'" onmouseout="this.style.boxShadow=''">
+                    <div style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary);margin-bottom:12px"><i class="bi bi-journal-text"></i></div>
+                    <h6 style="font-weight:600;font-size:.9rem;margin-bottom:4px">Summaries</h6>
+                    <p style="color:var(--text-muted);font-size:.82rem;margin:0;line-height:1.5">AI extracts the key points from your notes and presents them as a clear, concise summary you can review quickly.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div style="padding:24px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);height:100%;transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 4px 20px rgba(124,58,237,0.06)'" onmouseout="this.style.boxShadow=''">
+                    <div style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary);margin-bottom:12px"><i class="bi bi-clock"></i></div>
+                    <h6 style="font-weight:600;font-size:.9rem;margin-bottom:4px">Practice Tests</h6>
+                    <p style="color:var(--text-muted);font-size:.82rem;margin:0;line-height:1.5">Timed tests that score you instantly. See which topics you've mastered and where you need more study time.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div style="padding:24px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);height:100%;transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 4px 20px rgba(124,58,237,0.06)'" onmouseout="this.style.boxShadow=''">
+                    <div style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--primary);margin-bottom:12px"><i class="bi bi-people"></i></div>
+                    <h6 style="font-weight:600;font-size:.9rem;margin-bottom:4px">Community</h6>
+                    <p style="color:var(--text-muted);font-size:.82rem;margin:0;line-height:1.5">Share study materials, discover notes from other students, and collaborate with the learning community.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding:80px 0;background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+                <span style="display:inline-block;background:var(--primary-light);color:var(--primary);font-size:.7rem;font-weight:600;padding:4px 12px;border-radius:100px;margin-bottom:12px">Why Choose Us</span>
+                <h2 style="font-size:1.75rem;font-weight:800;margin-bottom:12px;letter-spacing:-.02em">AI that studies your actual notes</h2>
+                <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:24px;line-height:1.6">Unlike generic study apps, Chhohreivung generates content specifically from <em>your</em> uploaded notes. Every question, flashcard, and summary is based on the exact material you're studying — not generic content.</p>
+                <div style="display:flex;flex-direction:column;gap:14px">
+                    <div style="display:flex;align-items:flex-start;gap:10px">
+                        <div style="width:22px;height:22px;border-radius:6px;background:rgba(16,185,129,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><i class="bi bi-check" style="color:#10B981;font-size:.7rem"></i></div>
+                        <div><div style="font-weight:600;font-size:.85rem;margin-bottom:2px">Context-Aware Generation</div><div style="color:var(--text-muted);font-size:.8rem">AI reads and understands your specific study material before generating any content.</div></div>
+                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:10px">
+                        <div style="width:22px;height:22px;border-radius:6px;background:rgba(16,185,129,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><i class="bi bi-check" style="color:#10B981;font-size:.7rem"></i></div>
+                        <div><div style="font-weight:600;font-size:.85rem;margin-bottom:2px">Multiple Study Formats</div><div style="color:var(--text-muted);font-size:.8rem">One upload gives you MCQs, short and long questions, flashcards, and a summary.</div></div>
+                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:10px">
+                        <div style="width:22px;height:22px;border-radius:6px;background:rgba(16,185,129,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><i class="bi bi-check" style="color:#10B981;font-size:.7rem"></i></div>
+                        <div><div style="font-weight:600;font-size:.85rem;margin-bottom:2px">Track Your Progress</div><div style="color:var(--text-muted);font-size:.8rem">Practice tests with instant scoring and performance tracking to identify weak areas.</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                    <div style="padding:28px 20px;border-radius:12px;border:1px solid var(--border);text-align:center;background:var(--bg)">
+                        <div style="font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--primary),#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px">{{ public_notes_count|default:"0" }}+</div>
+                        <div style="color:var(--text-muted);font-size:.8rem">Notes Uploaded</div>
+                    </div>
+                    <div style="padding:28px 20px;border-radius:12px;border:1px solid var(--border);text-align:center;background:var(--bg)">
+                        <div style="font-size:2rem;font-weight:800;background:linear-gradient(135deg,#10B981,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px">5</div>
+                        <div style="color:var(--text-muted);font-size:.8rem">Free Generations/Day</div>
+                    </div>
+                    <div style="padding:28px 20px;border-radius:12px;border:1px solid var(--border);text-align:center;background:var(--bg)">
+                        <div style="font-size:2rem;font-weight:800;background:linear-gradient(135deg,#F59E0B,#FBBF24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px">AI</div>
+                        <div style="color:var(--text-muted);font-size:.8rem">Powered Generation</div>
+                    </div>
+                    <div style="padding:28px 20px;border-radius:12px;border:1px solid var(--border);text-align:center;background:var(--bg)">
+                        <div style="font-size:2rem;font-weight:800;background:linear-gradient(135deg,#EF4444,#F87171);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px">₹0</div>
+                        <div style="color:var(--text-muted);font-size:.8rem">Free to Start</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding:80px 0">
+    <div class="container">
+        <div style="text-align:center;max-width:600px;margin:0 auto 48px">
+            <span style="display:inline-block;background:var(--primary-light);color:var(--primary);font-size:.7rem;font-weight:600;padding:4px 12px;border-radius:100px;margin-bottom:12px">Testimonials</span>
+            <h2 style="font-size:1.75rem;font-weight:800;margin-bottom:8px;letter-spacing:-.02em">What students say</h2>
+            <p style="color:var(--text-muted);font-size:.95rem;margin:0">Hear from students who use Chhohreivung to study smarter.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div style="padding:24px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);height:100%">
+                    <div style="display:flex;align-items:center;gap:2px;margin-bottom:12px">
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                    </div>
+                    <p style="font-size:.85rem;color:var(--text-muted);line-height:1.6;margin-bottom:16px;font-style:italic">"This platform saved me hours of study time. I uploaded my biology notes and had 20 MCQs ready in seconds. The explanations are actually helpful."</p>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#10B981,#34D399);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:.8rem">A</div>
+                        <div><div style="font-weight:600;font-size:.82rem">Ananya Sharma</div><div style="color:var(--text-muted);font-size:.7rem">Biology Student</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div style="padding:24px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);height:100%">
+                    <div style="display:flex;align-items:center;gap:2px;margin-bottom:12px">
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                    </div>
+                    <p style="font-size:.85rem;color:var(--text-muted);line-height:1.6;margin-bottom:16px;font-style:italic">"The flashcard feature is incredible. I went from struggling to recall concepts to acing my midterms. The spaced repetition approach really works."</p>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#A78BFA);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:.8rem">R</div>
+                        <div><div style="font-weight:600;font-size:.82rem">Rahul Patel</div><div style="color:var(--text-muted);font-size:.7rem">Engineering Student</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div style="padding:24px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);height:100%">
+                    <div style="display:flex;align-items:center;gap:2px;margin-bottom:12px">
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                        <i class="bi bi-star-fill" style="color:#F59E0B;font-size:.75rem"></i>
+                    </div>
+                    <p style="font-size:.85rem;color:var(--text-muted);line-height:1.6;margin-bottom:16px;font-style:italic">"I love that I can share my notes and see what others are studying. It feels like a real study community. The summary feature is perfect for revision."</p>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#FBBF24);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:.8rem">P</div>
+                        <div><div style="font-weight:600;font-size:.82rem">Priya Singh</div><div style="color:var(--text-muted);font-size:.7rem">Medical Student</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding:80px 0;background:var(--bg-card);border-top:1px solid var(--border)">
+    <div class="container">
+        <div style="text-align:center;max-width:550px;margin:0 auto 40px">
+            <span style="display:inline-block;background:var(--primary-light);color:var(--primary);font-size:.7rem;font-weight:600;padding:4px 12px;border-radius:100px;margin-bottom:12px">Plans</span>
+            <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:8px;letter-spacing:-.02em">Simple, transparent pricing</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0">Start free. Upgrade when you need more.</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div style="padding:32px 28px;border-radius:16px;border:1.5px solid var(--border);background:var(--bg-card);height:100%">
+                    <h5 style="font-weight:700;font-size:1.1rem;margin-bottom:4px">Free</h5>
+                    <p style="color:var(--text-muted);font-size:.82rem;margin-bottom:20px">For students getting started</p>
+                    <div style="font-size:2.5rem;font-weight:800;margin-bottom:4px">₹<span style="font-size:inherit">0</span></div>
+                    <div style="color:var(--text-muted);font-size:.8rem;margin-bottom:24px">forever</div>
+                    <ul style="list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:10px">
+                        <li style="display:flex;align-items:center;gap:8px;font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981;font-size:.75rem"></i> 5 AI generations/day</li>
+                        <li style="display:flex;align-items:center;gap:8px;font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981;font-size:.75rem"></i> Up to 5 uploads/day</li>
+                        <li style="display:flex;align-items:center;gap:8px;font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981;font-size:.75rem"></i> 10MB file size limit</li>
+                        <li style="display:flex;align-items:center;gap:8px;font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981;font-size:.75rem"></i> Community access</li>
+                    </ul>
+                    {% if user.is_authenticated %}
+                    <div style="padding:10px;border-radius:10px;background:var(--bg);text-align:center;font-size:.85rem;color:var(--text-muted)">Current Plan</div>
+                    {% else %}
+                    <a href="{% url 'account_signup' %}" style="display:block;text-align:center;padding:10px;border-radius:10px;border:1.5px solid var(--border);color:var(--text);font-weight:600;font-size:.85rem;text-decoration:none">Get Started</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-5 col-lg-4">
+                <div style="padding:32px 28px;border-radius:16px;border:1.5px solid var(--primary);background:var(--bg-card);height:100%;position:relative;box-shadow:0 4px 24px rgba(124,58,237,0.1)">
+                    <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;font-size:.7rem;font-weight:600;padding:4px 14px;border-radius:100px">Popular</div>
+                    <h5 style="font-weight:700;font-size:1.1rem;margin-bottom:4px">Premium</h5>
+                    <p style="color:var(--text-muted);font-size:.82rem;margin-bottom:20px">For serious learners</p>
+                    <div style="font-size:2.5rem;font-weight:800;margin-bottom:4px">₹<span style="font-size:inherit">199</span></div>
+                    <div style="color:var(--text-muted);font-size:.8rem;margin-bottom:24px">per month</div>
+                    <ul style="list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:10px">
+                        <li style="display:flex;align-items:center;gap:8px;font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981;font-size:.75rem"></i> Unlimited AI generations</li>
+                        <li style="display:flex;align-items:center;gap:8px;font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981;font-size:.75rem"></i> Unlimited uploads</li>
+                        <li style="display:flex;align-items:center;gap:8px;font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981;font-size:.75rem"></i> 100MB file size limit</li>
+                        <li style="display:flex;align-items:center;gap:8px;font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981;font-size:.75rem"></i> Note downloads</li>
+                        <li style="display:flex;align-items:center;gap:8px;font-size:.85rem"><i class="bi bi-check-circle-fill" style="color:#10B981;font-size:.75rem"></i> Priority support</li>
+                    </ul>
+                    <a href="{% url 'pricing' %}" style="display:block;text-align:center;padding:10px;border-radius:10px;background:var(--primary);color:#fff;font-weight:600;font-size:.85rem;text-decoration:none">Upgrade Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding:60px 0;border-bottom:1px solid var(--border)">
+    <div class="container">
+        <div style="max-width:720px;margin:0 auto">
+            <div style="text-align:center;margin-bottom:32px">
+                <span style="display:inline-block;background:var(--primary-light);color:var(--primary);font-size:.7rem;font-weight:600;padding:4px 12px;border-radius:100px;margin-bottom:12px">FAQ</span>
+                <h2 style="font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin:0">Frequently asked questions</h2>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+                <details style="border:1px solid var(--border);border-radius:12px;overflow:hidden" open>
+                    <summary style="padding:16px 20px;font-weight:600;font-size:.9rem;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;background:var(--bg-card)">What file formats are supported? <span style="font-size:.7rem;transition:transform .2s"><i class="bi bi-chevron-down"></i></span></summary>
+                    <div style="padding:0 20px 16px;font-size:.85rem;color:var(--text-muted);line-height:1.6;border-top:1px solid var(--border);padding-top:12px">We support PDF and DOCX formats. Your document is processed securely and the extracted text is used for AI generation. We recommend clear, typed documents for best results.</div>
+                </details>
+                <details style="border:1px solid var(--border);border-radius:12px;overflow:hidden">
+                    <summary style="padding:16px 20px;font-weight:600;font-size:.9rem;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;background:var(--bg-card)">Is it really free? <span style="font-size:.7rem;transition:transform .2s"><i class="bi bi-chevron-down"></i></span></summary>
+                    <div style="padding:0 20px 16px;font-size:.85rem;color:var(--text-muted);line-height:1.6;border-top:1px solid var(--border);padding-top:12px">Yes! You get 5 AI generations per day on the free plan. No credit card required. Upgrade to Premium (₹199/month) for unlimited generations, uploads, and note downloads.</div>
+                </details>
+                <details style="border:1px solid var(--border);border-radius:12px;overflow:hidden">
+                    <summary style="padding:16px 20px;font-weight:600;font-size:.9rem;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;background:var(--bg-card)">How accurate is the AI generation? <span style="font-size:.7rem;transition:transform .2s"><i class="bi bi-chevron-down"></i></span></summary>
+                    <div style="padding:0 20px 16px;font-size:.85rem;color:var(--text-muted);line-height:1.6;border-top:1px solid var(--border);padding-top:12px">The AI reads your actual uploaded notes, so the generated content is based on your specific material. It uses Groq's LLM technology to create contextually relevant questions and summaries. Quality depends on the clarity of your source material.</div>
+                </details>
+                <details style="border:1px solid var(--border);border-radius:12px;overflow:hidden">
+                    <summary style="padding:16px 20px;font-weight:600;font-size:.9rem;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;background:var(--bg-card)">Can I share my notes with others? <span style="font-size:.7rem;transition:transform .2s"><i class="bi bi-chevron-down"></i></span></summary>
+                    <div style="padding:0 20px 16px;font-size:.85rem;color:var(--text-muted);line-height:1.6;border-top:1px solid var(--border);padding-top:12px">Yes! You can make your notes public so other students can discover them. You can also keep them private or share them with specific people. Public notes appear in the Browse section for the community.</div>
+                </details>
+                <details style="border:1px solid var(--border);border-radius:12px;overflow:hidden">
+                    <summary style="padding:16px 20px;font-weight:600;font-size:.9rem;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;background:var(--bg-card)">How do I upgrade my plan? <span style="font-size:.7rem;transition:transform .2s"><i class="bi bi-chevron-down"></i></span></summary>
+                    <div style="padding:0 20px 16px;font-size:.85rem;color:var(--text-muted);line-height:1.6;border-top:1px solid var(--border);padding-top:12px">Go to the Pricing page, choose Premium or Pro, and complete the payment via Razorpay. Premium gives you unlimited AI generations and note downloads. Pro includes all features plus priority support.</div>
+                </details>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding:80px 0">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-6 text-center">
+                <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:8px;letter-spacing:-.02em">Ready to study smarter?</h2>
+                <p style="color:var(--text-muted);font-size:.95rem;margin-bottom:28px;max-width:450px;margin-left:auto;margin-right:auto">Join thousands of students already using AI to transform their notes into interactive study materials.</p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'note_upload' %}" class="btn btn-primary btn-lg px-4" style="border-radius:10px;padding:12px 28px;font-size:.95rem;font-weight:600">Upload Your First Note <i class="bi bi-arrow-right ms-1"></i></a>
+                    {% else %}
+                    <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg px-4" style="border-radius:10px;padding:12px 28px;font-size:.95rem;font-weight:600">Create Free Account <i class="bi bi-arrow-right ms-1"></i></a>
+                    <a href="{% url 'account_login' %}" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;font-size:.95rem;font-weight:500;color:var(--text-muted);text-decoration:none;border:1.5px solid var(--border)">Sign In</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </section>
