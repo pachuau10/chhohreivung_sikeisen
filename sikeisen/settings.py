@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'sikeisen.wsgi.application'
 DATABASE_URL = config('DATABASE_URL', default='')
 if DATABASE_URL:
     DATABASES = {
-        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=60)
+        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=0)
     }
 elif config('DB_NAME', default=''):
     DATABASES = {
