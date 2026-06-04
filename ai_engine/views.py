@@ -15,6 +15,8 @@ from tests.models import UsageLog
 class GenerateMCQView(LoginRequiredMixin, View):
     def post(self, request, pk):
         note = get_object_or_404(Note, pk=pk, user=request.user)
+        if not note.extracted_text:
+            return JsonResponse({'error': 'No text content found. The document may not have been processed correctly. Try re-uploading.'}, status=400)
         profile = request.user.profile
         if not request.user.is_staff and profile.generations_remaining <= 0:
             return JsonResponse({
@@ -44,6 +46,8 @@ class GenerateMCQView(LoginRequiredMixin, View):
 class GenerateShortQuestionsView(LoginRequiredMixin, View):
     def post(self, request, pk):
         note = get_object_or_404(Note, pk=pk, user=request.user)
+        if not note.extracted_text:
+            return JsonResponse({'error': 'No text content found. The document may not have been processed correctly. Try re-uploading.'}, status=400)
         profile = request.user.profile
         if not request.user.is_staff and profile.generations_remaining <= 0:
             return JsonResponse({
@@ -72,6 +76,8 @@ class GenerateShortQuestionsView(LoginRequiredMixin, View):
 class GenerateLongQuestionsView(LoginRequiredMixin, View):
     def post(self, request, pk):
         note = get_object_or_404(Note, pk=pk, user=request.user)
+        if not note.extracted_text:
+            return JsonResponse({'error': 'No text content found. The document may not have been processed correctly. Try re-uploading.'}, status=400)
         profile = request.user.profile
         if not request.user.is_staff and profile.generations_remaining <= 0:
             return JsonResponse({
@@ -100,6 +106,8 @@ class GenerateLongQuestionsView(LoginRequiredMixin, View):
 class GenerateFlashcardsView(LoginRequiredMixin, View):
     def post(self, request, pk):
         note = get_object_or_404(Note, pk=pk, user=request.user)
+        if not note.extracted_text:
+            return JsonResponse({'error': 'No text content found. The document may not have been processed correctly. Try re-uploading.'}, status=400)
         profile = request.user.profile
         if not request.user.is_staff and profile.generations_remaining <= 0:
             return JsonResponse({
@@ -126,6 +134,8 @@ class GenerateFlashcardsView(LoginRequiredMixin, View):
 class GenerateSummaryView(LoginRequiredMixin, View):
     def post(self, request, pk):
         note = get_object_or_404(Note, pk=pk, user=request.user)
+        if not note.extracted_text:
+            return JsonResponse({'error': 'No text content found. The document may not have been processed correctly. Try re-uploading.'}, status=400)
         profile = request.user.profile
         if not request.user.is_staff and profile.generations_remaining <= 0:
             return JsonResponse({
