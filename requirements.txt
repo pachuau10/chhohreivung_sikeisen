@@ -42,3 +42,4 @@ whitenoise==6.9.0
 gunicorn==23.0.0
 packaging==24.2
 PyJWT==2.13.0
+reportlab==4.3.1
