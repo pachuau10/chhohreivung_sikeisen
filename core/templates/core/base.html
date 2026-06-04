@@ -486,7 +486,6 @@
             var stored = null;
             try { stored = localStorage.getItem('theme'); } catch(e) {}
             if (stored) { setTheme(stored === 'dark'); }
-            else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { setTheme(true); }
             document.addEventListener('click', function(e) {
                 var btn = e.target.closest('#darkModeToggle, #darkModeToggleMobile');
                 if (btn) setTheme(html.getAttribute('data-theme') !== 'dark');
