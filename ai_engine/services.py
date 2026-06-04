@@ -9,49 +9,40 @@ class AIService:
         self.client = GeminiClient()
 
     def generate_mcqs(self, text, count=20):
-        prompt = f"""Based on the following study material, generate {count} multiple choice questions.
-Return a valid JSON array of objects with keys: question, options, correct, explanation. No other text.
+        prompt = f"""Generate {count} multiple choice questions from this text. Return ONLY a JSON array. Each object must have keys: question, options (array of 4 strings), correct (0-based index), explanation.
 
-Study material:
 {text[:15000]}
 """
         response = self.client.generate(prompt)
         return self._parse_json_array(response)
 
     def generate_short_questions(self, text, count=10):
-        prompt = f"""Based on the following study material, generate {count} short answer questions.
-Return a valid JSON array of objects with keys: question, answer, explanation. No other text.
+        prompt = f"""Generate {count} short answer questions from this text. Return ONLY a JSON array. Each object must have keys: question, answer, explanation.
 
-Study material:
 {text[:15000]}
 """
         response = self.client.generate(prompt)
         return self._parse_json_array(response)
 
     def generate_long_questions(self, text, count=5):
-        prompt = f"""Based on the following study material, generate {count} long answer/essay questions.
-Return a valid JSON array of objects with keys: question, answer, explanation. No other text.
+        prompt = f"""Generate {count} long answer/essay questions from this text. Return ONLY a JSON array. Each object must have keys: question, answer, explanation.
 
-Study material:
 {text[:15000]}
 """
         response = self.client.generate(prompt)
         return self._parse_json_array(response)
 
     def generate_flashcards(self, text, count=20):
-        prompt = f"""Based on the following study material, generate {count} flashcards.
-Return a valid JSON array of objects with keys: front, back. No other text.
+        prompt = f"""Generate {count} flashcards from this text. Return ONLY a JSON array. Each object must have keys: front, back.
 
-Study material:
 {text[:15000]}
 """
         response = self.client.generate(prompt)
         return self._parse_json_array(response)
 
     def generate_summary(self, text):
-        prompt = f"""Based on the following study material, write a comprehensive summary covering the main topics and key concepts. Write in clear paragraphs.
+        prompt = f"""Write a concise summary of this text covering main topics and key concepts.
 
-Study material:
 {text[:15000]}
 """
         response = self.client.generate(prompt)
@@ -62,6 +53,8 @@ Study material:
         return response.strip()
 
     def _parse_json_array(self, text):
+        import logging
+        logger = logging.getLogger(__name__)
         text = text.strip()
         text = re.sub(r'```(?:json)?\s*', '', text)
         text = text.strip()
@@ -82,6 +75,7 @@ Study material:
             result = json.loads(text)
             if isinstance(result, dict):
                 if 'error' in result:
+                    logger.warning('AI returned error: %s', text[:200])
                     return []
                 return [result]
             return result
@@ -104,4 +98,6 @@ Study material:
                     parsed.append(json.loads(fixed))
                 except json.JSONDecodeError:
                     continue
+        if not parsed:
+            logger.warning('Failed to parse AI response (first 500 chars): %s', text[:500])
         return parsed
