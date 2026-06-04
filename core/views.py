@@ -375,6 +375,13 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
+        hour = tz.localtime(tz.now()).hour
+        if hour < 12:
+            context['time_greeting'] = 'Good Morning'
+        elif hour < 17:
+            context['time_greeting'] = 'Good Afternoon'
+        else:
+            context['time_greeting'] = 'Good Evening'
         context['uploaded_notes'] = Note.objects.filter(user=user).count()
         context['downloads'] = user.downloads.count()
         context['saved_notes'] = user.bookmarks.count()
