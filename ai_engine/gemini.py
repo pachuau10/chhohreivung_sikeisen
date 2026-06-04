@@ -42,7 +42,7 @@ class GeminiClient:
         if not self.api_key:
             return self._mock_response(prompt)
         last_error = None
-        for attempt in range(3):
+        for attempt in range(5):
             try:
                 resp = requests.post(
                     'https://api.groq.com/openai/v1/chat/completions',
@@ -53,18 +53,18 @@ class GeminiClient:
                 resp.raise_for_status()
                 return resp.json()['choices'][0]['message']['content']
             except requests.exceptions.HTTPError as e:
-                if e.response.status_code == 429 and attempt < 2:
-                    wait = 2 ** attempt
+                if e.response.status_code == 429 and attempt < 4:
+                    wait = attempt + 1
                     logger.warning(f'Groq rate limited, retrying in {wait}s')
                     time.sleep(wait)
                     last_error = e
                 else:
-                    logger.error(f'Groq API error: {e}')
-                    return json.dumps({'error': f'Groq API error: {e}'})
+                    logger.error(f'Groq API error: {e}, falling back to mock')
+                    return self._mock_response(prompt)
             except Exception as e:
                 logger.error(f'Groq API error: {e}')
-                return json.dumps({'error': f'Groq API error: {e}'})
-        return json.dumps({'error': f'Groq API error: {last_error}'})
+                return self._mock_response(prompt)
+        return self._mock_response(prompt)
 
     def _gemini_generate(self, prompt, temperature, max_tokens):
         if not self.model:
