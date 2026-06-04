@@ -42,16 +42,20 @@ class NoteUploadView(LoginRequiredMixin, CreateView):
 
     def process_document(self, note):
         try:
-            file_path = note.file.path
+            import requests as req
+            from io import BytesIO
+            resp = req.get(note.file.url, timeout=30)
+            resp.raise_for_status()
+            data = BytesIO(resp.content)
             text = ''
             if note.file_type == 'pdf':
-                doc = fitz.open(file_path)
+                doc = fitz.open(stream=data, filetype='pdf')
                 note.page_count = doc.page_count
                 for page in doc:
                     text += page.get_text()
                 doc.close()
             elif note.file_type == 'docx':
-                doc = docx.Document(file_path)
+                doc = docx.Document(data)
                 text = '\n'.join([p.text for p in doc.paragraphs])
                 note.page_count = len(doc.paragraphs)
             note.extracted_text = text[:50000]
